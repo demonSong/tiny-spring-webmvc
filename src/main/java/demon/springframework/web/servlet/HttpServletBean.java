@@ -19,9 +19,14 @@ public class HttpServletBean extends HttpServlet {
 		super.init();
 	}
 	
+	/**
+	 * 以上代码有如下缺点:
+	 * 1:web 发送过来的不同请求,都需要重写servlet的get,put,delete等方法
+	 * 2:映射关系需要context进行初始化,并且所有的映射都由xml文件所描述
+	 * 3:作为一个框架,切忌使用写死的config信息
+	 */
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException {
 		//获得由web前端传入的路径
 		String path =req.getServletPath();
 		String configLocation =path.substring(1, path.length());
@@ -35,4 +40,5 @@ public class HttpServletBean extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
+	
 }
