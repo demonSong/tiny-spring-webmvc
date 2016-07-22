@@ -4,9 +4,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import demon.springframework.web.servlet.mvc.Controller;
+import demon.springframework.web.util.UrlPathHelper;
 
 public class DispatcherServlet extends FrameworkServlet{
 
+	private UrlPathHelper urlPathHelper = new UrlPathHelper();
 	
 	@Override
 	protected void doService(HttpServletRequest request,HttpServletResponse response) throws Exception {
@@ -24,11 +26,10 @@ public class DispatcherServlet extends FrameworkServlet{
 	}
 	
 	protected Controller getHandler(HttpServletRequest request){
-		String path =request.getServletPath();
-		String configLocation =path.substring(1,path.length());
+		String lookupPath =this.urlPathHelper.getLookupPathForRequest(request);
 		Controller handler;
 		try {
-			handler = (Controller) getWebApplicationContext().getBean(configLocation);
+			handler = (Controller) getWebApplicationContext().getBean(lookupPath);
 			return handler;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
