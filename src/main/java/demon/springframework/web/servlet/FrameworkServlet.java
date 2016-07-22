@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.aop.ThrowsAdvice;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.support.ServletRequestHandledEvent;
@@ -116,25 +117,13 @@ public abstract class FrameworkServlet extends HttpServletBean {
 
 	protected final void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		Throwable failureCause = null;
-		try {
-			doService(request, response);
-		}
-		catch (ServletException ex) {
-			failureCause = ex;
-			throw ex;
-		}
-		catch (IOException ex) {
-			failureCause = ex;
-			throw ex;
-		}
-		catch (Throwable ex) {
-			failureCause = ex;
-			throw new NestedServletException("Request processing failed", ex);
-		}
-		finally {
-			//do something else
-		}
+			try {
+				doService(request, response);
+			}
+			catch (Exception e) {
+			}
+			finally{
+			}
 	}
 	
 	protected abstract void doService(HttpServletRequest request, HttpServletResponse response)

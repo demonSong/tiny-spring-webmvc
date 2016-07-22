@@ -11,7 +11,6 @@ public class AddController implements Controller {
 	public void handleRequest(HttpServletRequest request,HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 		System.out.println("hello this is add controller");
-		
 	}
 
 }
