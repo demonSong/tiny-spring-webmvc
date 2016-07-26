@@ -6,8 +6,6 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
@@ -19,8 +17,6 @@ public class UrlPathHelper {
 	 * simply because we need the very first URI in the request forwarding chain.
 	 */
 	private static final String WEBSPHERE_URI_ATTRIBUTE = "com.ibm.websphere.servlet.uri_non_decoded";
-
-	private static final Log logger = LogFactory.getLog(UrlPathHelper.class);
 
 	static volatile Boolean websphereComplianceFlag;
 
@@ -295,10 +291,6 @@ public class UrlPathHelper {
 				return UriUtils.decode(source, enc);
 			}
 			catch (UnsupportedEncodingException ex) {
-				if (logger.isWarnEnabled()) {
-					logger.warn("Could not decode request string [" + source + "] with encoding '" + enc +
-							"': falling back to platform default encoding; exception message: " + ex.getMessage());
-				}
 				return URLDecoder.decode(source);
 			}
 		}
@@ -343,9 +335,6 @@ public class UrlPathHelper {
 				flag = Boolean.parseBoolean(prop.getProperty(propName));
 			}
 			catch (Throwable ex) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Could not introspect WebSphere web container properties: " + ex);
-				}
 			}
 			websphereComplianceFlag = flag;
 		}

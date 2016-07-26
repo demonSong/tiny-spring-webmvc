@@ -12,5 +12,15 @@
 	<!--controller 映射关系的建立 -->
 	<bean id="add" class="demon.springframework.web.servlet.test.AddController"></bean>
 	<bean id="update" class="demon.springframework.web.servlet.test.UpdateController"></bean>
+	
+	<!--HandlerMapping 配置url和controller的映射关系  -->
+	<bean id="urlMapping" class="demon.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+				<prop key="/add">add</prop>
+				<prop key="/update">update</prop>
+			</props>
+		</property>
+	</bean>
 
 </beans>
