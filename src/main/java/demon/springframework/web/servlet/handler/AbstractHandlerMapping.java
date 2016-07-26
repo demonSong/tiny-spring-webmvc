@@ -2,8 +2,10 @@ package demon.springframework.web.servlet.handler;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.BeansException;
 import org.springframework.web.servlet.HandlerExecutionChain;
 
+import demon.springframework.web.context.support.WebApplicationObjectSupport;
 import demon.springframework.web.servlet.HandlerMapping;
 import demon.springframework.web.servlet.mvc.Controller;
 import demon.springframework.web.servlet.mvc.DefaultController;
@@ -14,7 +16,7 @@ import demon.springframework.web.servlet.mvc.DefaultController;
  * @author demon.song
  *
  */
-public abstract class AbstractHandlerMapping implements HandlerMapping {
+public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport implements HandlerMapping {
 
 	private Object defaultHandler;
 	
@@ -30,6 +32,9 @@ public abstract class AbstractHandlerMapping implements HandlerMapping {
 	}
 	
 	//initApplicationContext() 主要是初始化拦截器
+	@Override
+	protected void initApplicationContext() throws BeansException {
+	}
 	
 	@Override
 	public final Controller getHandler(HttpServletRequest request) throws Exception {

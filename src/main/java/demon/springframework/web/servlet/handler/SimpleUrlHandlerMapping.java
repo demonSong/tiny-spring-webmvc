@@ -31,6 +31,12 @@ public class SimpleUrlHandlerMapping extends AbstractUrlHandlerMapping{
 		return this.urlMap;
 	}
 	
+	@Override
+	public void initApplicationContext() throws BeansException {
+		super.initApplicationContext();
+		registerHandlers(this.urlMap);
+	}
+	
 	protected void registerHandlers(Map<String, Object> urlMap) throws BeansException {
 		if (urlMap.isEmpty()) {
 			//do something logger
