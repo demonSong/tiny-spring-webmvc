@@ -1,13 +1,14 @@
 package demon.springframework.context.support;
 
-import us.codecraft.tinyioc.beans.BeanPostProcessor;
+import demon.springframework.beans.BeanPostProcessor;
 import demon.springframework.context.ApplicationContextAware;
 import demon.springframework.context.ConfigurableApplicationContext;
 
 class ApplicationContextAwareProcessor implements BeanPostProcessor{
 	
 	private final ConfigurableApplicationContext applicationContext;
-
+	
+	//初始化失败的原因,是构造函数中没有默认的无参构造方法,那怎么进行有参的反射初始化
 	public ApplicationContextAwareProcessor(ConfigurableApplicationContext applicationContext) {
 		this.applicationContext = applicationContext;
 	}

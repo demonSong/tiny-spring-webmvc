@@ -3,8 +3,7 @@ package demon.springframework.web.context.support;
 import javax.servlet.ServletContext;
 
 import org.springframework.web.context.WebApplicationContext;
-
-import us.codecraft.tinyioc.context.ApplicationContext;
+import demon.springframework.context.ApplicationContext;
 import demon.springframework.context.support.ApplicationObjectSupport;
 import demon.springframework.web.context.ServletContextAware;
 

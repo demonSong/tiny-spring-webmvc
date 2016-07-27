@@ -14,13 +14,13 @@
 	<bean id="update" class="demon.springframework.web.servlet.test.UpdateController"></bean>
 	
 	<!--HandlerMapping 配置url和controller的映射关系  -->
-	<bean id="urlMapping" class="demon.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	<!-- <bean id="urlMapping" class="demon.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">
 			<props>
 				<prop key="/add">add</prop>
 				<prop key="/update">update</prop>
 			</props>
 		</property>
-	</bean>
+	</bean> -->
 
 </beans>

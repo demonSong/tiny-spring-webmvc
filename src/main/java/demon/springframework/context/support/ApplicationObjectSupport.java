@@ -4,7 +4,7 @@ package demon.springframework.context.support;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContextException;
 
-import us.codecraft.tinyioc.context.ApplicationContext;
+import demon.springframework.context.ApplicationContext;
 import demon.springframework.context.ApplicationContextAware;
 
 /**

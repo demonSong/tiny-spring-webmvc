@@ -6,9 +6,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import us.codecraft.tinyioc.context.ClassPathXmlApplicationContext;
-import us.codecraft.tinyioc.context.WebApplicationContext;
-import us.codecraft.tinyioc.context.support.WebApplicationContextUtils;
+import demon.springframework.context.ClassPathXmlApplicationContext;
+import demon.springframework.context.WebApplicationContext;
+import demon.springframework.context.support.WebApplicationContextUtils;
 
 public abstract class FrameworkServlet extends HttpServletBean {
 
@@ -61,6 +61,7 @@ public abstract class FrameworkServlet extends HttpServletBean {
 		return wac;
 	}
 	
+	//出现配置不正确,所以导致 context是不存在的 为null值
 	protected WebApplicationContext createWebApplicationContext() {
 		try {
 			return new ClassPathXmlApplicationContext(DEFAULT_XML_RESOURCE);
