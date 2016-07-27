@@ -31,7 +31,8 @@ public abstract class AbstractApplicationContext implements WebApplicationContex
 		for (Object beanPostProcessor : beanPostProcessors) {
 			beanFactory.addBeanPostProcessor((BeanPostProcessor) beanPostProcessor);
 		}
-		//直接在代码中new出来
+		//直接在代码中new出来,这样一个处理器
+		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
 	}
 
 	protected void onRefresh() throws Exception{

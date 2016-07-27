@@ -48,6 +48,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 		if(handler instanceof String){
 			String handlerName = (String) handler;
 			//通过 applicationContext.getBean方法获得处理器
+			handler =getApplicationContext().getBean(handlerName);
 		}
 		return getHandlerExecutionController(handler, request);
 	}

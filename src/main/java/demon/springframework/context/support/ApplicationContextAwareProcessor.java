@@ -24,6 +24,7 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor{
 	}
 	
 	private void invokeAwareInterfaces(Object bean) {
+		//在这做类型分发,也就是对应的某些接口,才可以使用该处理器
 		if (bean instanceof ApplicationContextAware) {
 			((ApplicationContextAware) bean).setApplicationContext(this.applicationContext);
 		}
@@ -31,7 +32,7 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor{
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws Exception {
-		return null;
+		return bean;
 	}
 
 }

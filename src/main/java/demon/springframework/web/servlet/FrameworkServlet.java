@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import demon.springframework.context.ApplicationContext;
 import demon.springframework.context.ClassPathXmlApplicationContext;
 import demon.springframework.context.WebApplicationContext;
 import demon.springframework.context.support.WebApplicationContextUtils;
@@ -16,6 +17,9 @@ public abstract class FrameworkServlet extends HttpServletBean {
 	 * 封装我们需要的context
 	 */
 	private WebApplicationContext webApplicationContext;
+	
+	/** Flag used to detect whether onRefresh has already been called */
+	private boolean refreshEventReceived = false;
 	
 	/**
 	 * servlet 加载默认目录
@@ -41,6 +45,10 @@ public abstract class FrameworkServlet extends HttpServletBean {
 	protected void initFrameWorkServlet() throws ServletException{
 	}
 	
+	protected void onRefresh(ApplicationContext context) {
+		// For subclasses: do nothing by default.
+	}
+	
 	/**
 	 * 所以说做初始化的时候,针对每一个函数,我们都可以分步骤来完成.
 	 * 显得非常有条理性
@@ -50,6 +58,7 @@ public abstract class FrameworkServlet extends HttpServletBean {
 		
 		//1.findWebApplicationContext
 		WebApplicationContext wac =findWebApplicationContext();
+		
 		//2.
 		if(wac == null){
 			//都是根据当前servletContext来生成的applicationContext
@@ -57,6 +66,12 @@ public abstract class FrameworkServlet extends HttpServletBean {
 			// WebApplicationContext parent =
 			// WebApplicationContextUtils.getWebApplicationContext(getServletContext());		
 			wac = createWebApplicationContext();
+		}
+		
+		if (!this.refreshEventReceived) {
+			// Apparently not a ConfigurableApplicationContext with refresh support:
+			// triggering initial onRefresh manually here.
+			onRefresh(wac);
 		}
 		return wac;
 	}

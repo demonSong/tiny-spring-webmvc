@@ -28,8 +28,12 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 		}
 		Object bean = beanDefinition.getBean();
 		if (bean == null) {
+			//在bean进行初始化时 会先创建bean
 			bean = doCreateBean(beanDefinition);
+			//添加bean的处理器,可以xml文件形式动态配置 or 可以在程序中就实现配置
             bean = initializeBean(bean, name);
+            //bean获得了增加,其实这是一种静态代理模式
+            //类似于缓存,在map中获得beandefinition中后,下次getbean直接可以在definition中取
             beanDefinition.setBean(bean);
 		}
 		return bean;
