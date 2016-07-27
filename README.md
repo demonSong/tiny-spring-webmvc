@@ -13,3 +13,6 @@ tiny-spring-webmvc
 
 	git checkout step-1-spring-mvc-add-controller
 
+### 1.step1-实现mvc到controller的直接映射
+
+### 2.step2-使用handlermapping来管理映射关系

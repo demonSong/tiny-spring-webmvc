@@ -10,8 +10,8 @@
 
 
 	<!--controller 映射关系的建立 -->
-	<bean id="add" class="demon.springframework.web.servlet.test.AddController"></bean>
-	<bean id="update" class="demon.springframework.web.servlet.test.UpdateController"></bean>
+	<bean id="add" class="demon.springframework.web.test.AddController"></bean>
+	<bean id="update" class="demon.springframework.web.test.UpdateController"></bean>
 	
 	<!--有些processor是直接在代码中new出来的  -->
 	<!-- <bean id="awareProcessor" class="demon.springframework.context.support.ApplicationContextAwareProcessor"></bean>
