@@ -13,6 +13,10 @@ import demon.springframework.web.context.ConfigurableWebApplicationContext;
  */
 public abstract class AbstractApplicationContext implements WebApplicationContext,ConfigurableApplicationContext{
 	protected AbstractBeanFactory beanFactory;
+	
+	public AbstractApplicationContext() {
+		this(null);
+	}
 
 	public AbstractApplicationContext(AbstractBeanFactory beanFactory) {
 		this.beanFactory = beanFactory;
