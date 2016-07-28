@@ -6,6 +6,7 @@ import demon.springframework.beans.BeanPostProcessor;
 import demon.springframework.beans.factory.AbstractBeanFactory;
 import demon.springframework.context.ConfigurableApplicationContext;
 import demon.springframework.context.WebApplicationContext;
+import demon.springframework.web.context.ConfigurableWebApplicationContext;
 
 /**
  * @author yihua.huang@dianping.com

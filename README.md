@@ -16,3 +16,7 @@ tiny-spring-webmvc
 ### 1.step1-实现mvc到controller的直接映射
 
 ### 2.step2-使用handlermapping来管理映射关系
+
+下一步计划,把配置文件指定在默认的/WEB-INFO/文件夹下
+
+实现ioc注解方式的实现
