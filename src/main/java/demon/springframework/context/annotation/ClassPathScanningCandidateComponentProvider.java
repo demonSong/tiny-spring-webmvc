@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,8 @@ import org.springframework.util.SystemPropertyUtils;
 
 import demon.springframework.beans.io.Resource;
 import demon.springframework.beans.io.support.PathMatchingResourcePatternResolver;
+import demon.springframework.core.type.classreading.MetadataReaderFactory;
+import demon.springframework.core.type.classreading.SimpleMetadataReaderFactory;
 
 public class ClassPathScanningCandidateComponentProvider {
 	
@@ -25,6 +28,8 @@ public class ClassPathScanningCandidateComponentProvider {
 	private String resourcePattern = DEFAULT_RESOURCE_PATTERN;
 	
 	private PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+
+	private MetadataReaderFactory metadataReaderFactory = new SimpleMetadataReaderFactory();
 
 	private final List<TypeFilter> includeFilters = new LinkedList<TypeFilter>();
 
@@ -59,13 +64,27 @@ public class ClassPathScanningCandidateComponentProvider {
 		try {
 			String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
 					+ resolveBasePackage(basePackage) + "/" + this.resourcePattern;
-			//知道文件路径，就需要初始化这些资源
+			//知道文件路径，就需要初始化这些资源,根据class path查找所有匹配的class文件,已备下一步做解析
 			Resource[] resources = this.resourcePatternResolver.getResources(packageSearchPath);
-			
-		} catch (IOException e) {
+			for (Resource resource : resources) {
+				if (resource.isReadable()) {
+					try {
+						this.metadataReaderFactory.getMetadataReader(resource);
+					}
+					catch (Throwable ex) {
+						
+					}
+				}	
+			}
+		} 
+		catch (IOException e) {
 		}
 		
 		return candidates;
+	}
+	
+	protected boolean isCandidateComponent(MetadataReader metadataReader) throws IOException {
+		return false;
 	}
 	
 	protected String resolveBasePackage(String basePackage) {
