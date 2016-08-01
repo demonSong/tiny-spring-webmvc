@@ -54,4 +54,9 @@ public class BeanDefinition {
 	public void setPropertyValues(PropertyValues propertyValues) {
 		this.propertyValues = propertyValues;
 	}
+	
+	@Override
+	public String toString() {
+		return "bean: " + getBeanClassName();
+	}
 }

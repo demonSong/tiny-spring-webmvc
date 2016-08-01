@@ -4,7 +4,7 @@ import demon.springframework.beans.BeanDefinition;
 
 public interface BeanDefinitionRegistry {
 	
-	void registerBeanDefinition(String beanName, BeanDefinition beanDefinition);
+	void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) throws Exception;
 	
 	void removeBeanDefinition(String beanName);
 	

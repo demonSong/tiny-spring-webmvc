@@ -3,22 +3,24 @@ package demon.springframework.context.annotation;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.util.Assert;
 
+import demon.springframework.beans.BeanDefinition;
+import demon.springframework.beans.factory.config.BeanDefinitionHolder;
+import demon.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import demon.springframework.beans.factory.support.BeanDefinitionRegistry;
+import demon.springframework.beans.factory.support.BeanNameGenerator;
 import demon.springframework.beans.io.ResourceLoader;
 
 
 public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateComponentProvider{
 	
-	//bean definition registry 在这里的作用
+	//bean definition registry 在这里的作用 有专门的注册中心来完成对bean的注册
 	private final BeanDefinitionRegistry registry;
 	
 	private String[] autowireCandidatePatterns;
 	
-	//bean name gengrator
+	private BeanNameGenerator beanNameGenerator = new AnnotationBeanNameGenerator();
 	
 	//scopeMetadataResolver
 	
@@ -65,9 +67,22 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 		for (String basePackage : basePackages) {
 			Set<BeanDefinition> candidates = findCandidateComponents(basePackage);
 			for (BeanDefinition candidate : candidates) {
+				String beanName = this.beanNameGenerator.generateBeanName(candidate, this.registry);
+				BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(candidate, beanName);
+				beanDefinitions.add(definitionHolder);
+				try {
+					registerBeanDefinition(definitionHolder, this.registry);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}						
 		}
 		return beanDefinitions;
+	}
+	
+	protected void registerBeanDefinition(BeanDefinitionHolder definitionHolder, BeanDefinitionRegistry registry) throws Exception {
+			BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, registry);
 	}
 	
 }

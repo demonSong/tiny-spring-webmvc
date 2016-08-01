@@ -300,7 +300,7 @@ tiny-spring-webmvc
 1.根据 classLoader来提供classpath，再由context-parm 来指定默认base-package
 2.两者组成了java访问文件的根目录，最终用递归方法，遍历所有符合的class
 3.对class文件进行解读？但显然还需要封装一些基本的类来完成上述操作
-4.spring中,采取asm读取字节码的方式来读取class中的基本配置信息在`SimpleMetadataReader`中进行实现
+4.spring中,采取asm读取字节码的方式来读取class中的基本配置信息在`SimpleMetadataReader`中进行实现,并由`visitor`完成对classReader的访问
 
 
 

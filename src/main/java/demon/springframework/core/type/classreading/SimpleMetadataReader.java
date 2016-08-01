@@ -6,6 +6,7 @@ import java.io.InputStream;
 import org.springframework.asm.ClassReader;
 
 import demon.springframework.beans.io.Resource;
+import demon.springframework.core.type.AnnotationMetadata;
 import demon.springframework.core.type.ClassMetadata;
 
 /*
@@ -17,6 +18,7 @@ final class SimpleMetadataReader implements MetadataReader{
 	
 	private final Resource resource;
 	private final ClassMetadata classMetadata;
+	private final AnnotationMetadata annotationMetadata;
 	//private final AnnotationMetadata annotationMetadata;
 	
 	SimpleMetadataReader(Resource resource, ClassLoader classLoader) throws IOException {
@@ -28,10 +30,10 @@ final class SimpleMetadataReader implements MetadataReader{
 			is.close();
 		}
 
-		ClassMetadataReadingVisitor visitor = new ClassMetadataReadingVisitor();
+		AnnotationMetadataReadingVisitor visitor = new AnnotationMetadataReadingVisitor(classLoader);
 		classReader.accept(visitor, true);
 		
-		//this.annotationMetadata = visitor;
+		this.annotationMetadata = visitor;
 		// (since AnnotationMetadataReader extends ClassMetadataReadingVisitor)
 		this.classMetadata = visitor;
 		this.resource = resource;
@@ -45,8 +47,8 @@ final class SimpleMetadataReader implements MetadataReader{
 		return this.classMetadata;
 	}
 
-//	public AnnotationMetadata getAnnotationMetadata() {
-//		return this.annotationMetadata;
-//	}
+	public AnnotationMetadata getAnnotationMetadata() {
+		return this.annotationMetadata;
+	}
 
 }

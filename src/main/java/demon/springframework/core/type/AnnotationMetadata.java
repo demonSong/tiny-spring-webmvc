@@ -3,10 +3,6 @@ package demon.springframework.core.type;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.core.type.MethodMetadata;
-
-import demon.springframework.core.type.ClassMetadata;
-
 public interface AnnotationMetadata extends ClassMetadata{
 	
 	Set<String> getAnnotationTypes();
