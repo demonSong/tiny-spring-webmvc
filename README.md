@@ -22,3 +22,7 @@ tiny-spring-webmvc
 实现ioc注解方式的实现
 
 如何实现mvc 初始化后 xml文件和class文件的同时加载
+
+### 3.step3-完成annotation进行ioc注解
+
+下一步计划：根据autowire来完成自动实例化，而不需要getBean方法来获取实例
