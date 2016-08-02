@@ -1,8 +1,8 @@
 package demon.springframework.web.test;
 
-import org.springframework.stereotype.Service;
+import demon.springframework.stereotype.Controller;
 
-@Service
+@Controller
 public class HelloServiceImpl {
 	
 	public void sayHello(){

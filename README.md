@@ -20,3 +20,5 @@ tiny-spring-webmvc
 下一步计划,把配置文件指定在默认的/WEB-INFO/文件夹下
 
 实现ioc注解方式的实现
+
+如何实现mvc 初始化后 xml文件和class文件的同时加载

@@ -3,11 +3,9 @@ package demon.springframework.web.test;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.stereotype.Service;
-
 import demon.springframework.web.servlet.mvc.Controller;
 
-@org.springframework.stereotype.Controller
+@demon.springframework.stereotype.Controller
 public class AddController implements Controller {
 
 	@Override

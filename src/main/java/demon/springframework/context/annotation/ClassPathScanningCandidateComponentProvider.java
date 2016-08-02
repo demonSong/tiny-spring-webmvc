@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.SystemPropertyUtils;
 
@@ -21,6 +20,7 @@ import demon.springframework.core.type.classreading.MetadataReaderFactory;
 import demon.springframework.core.type.classreading.SimpleMetadataReaderFactory;
 import demon.springframework.core.type.filter.AnnotationTypeFilter;
 import demon.springframework.core.type.filter.TypeFilter;
+import demon.springframework.stereotype.Component;
 
 public class ClassPathScanningCandidateComponentProvider {
 	
