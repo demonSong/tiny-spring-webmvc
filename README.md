@@ -26,3 +26,11 @@ tiny-spring-webmvc
 ### 3.step3-完成annotation进行ioc注解
 
 下一步计划：根据autowire来完成自动实例化，而不需要getBean方法来获取实例
+autowire实现基本思路:
+有一个入口类来完成xml文件的配置读取工作,然后当在getBean获得某个类时,进行autowire扫描来实现依赖注入
+autowire有两种实现方式:
+1.通过beanPostProcessor在bean进行初始化时,对其进行xml注入,但由于有AUTOWIRE标识所以可以省去set方法
+2.不需要任何处理器,也不需要编写定义任何xml数据,直接进行初始化,背后实现的机制是什么呢?比较适合无业务对象的逻辑,即没有基本类型的成员对象.
+
+各种bean 在初始化的时候会调用一个beanAnnotationPostProcessor用来扫描所有field的注解,从而进行依赖注入
+

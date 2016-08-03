@@ -2,6 +2,9 @@ package demon.springframework.context.support;
 
 import java.util.List;
 
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.core.convert.ConversionService;
+
 import demon.springframework.beans.BeanPostProcessor;
 import demon.springframework.beans.factory.AbstractBeanFactory;
 import demon.springframework.context.ConfigurableApplicationContext;
@@ -23,9 +26,11 @@ public abstract class AbstractApplicationContext implements WebApplicationContex
 	}
 
 	public void refresh() throws Exception {
+		//防止多个线程的进入
 		loadBeanDefinitions(beanFactory);
 		registerBeanPostProcessors(beanFactory);
 		onRefresh();
+		
 	}
 
 	protected abstract void loadBeanDefinitions(AbstractBeanFactory beanFactory) throws Exception;
@@ -48,4 +53,5 @@ public abstract class AbstractApplicationContext implements WebApplicationContex
 	public Object getBean(String name) throws Exception {
 		return beanFactory.getBean(name);
 	}
+	
 }

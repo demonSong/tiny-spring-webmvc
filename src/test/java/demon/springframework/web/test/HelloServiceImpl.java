@@ -1,12 +1,17 @@
 package demon.springframework.web.test;
 
-import demon.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Controller
+import demon.springframework.stereotype.Service;
+
+@Service
 public class HelloServiceImpl {
 	
+	@Autowired
+	private OutputServiceImpl outputServiceImpl;
+	
 	public void sayHello(){
-		System.out.println("hello my name is demon!");
+		outputServiceImpl.output();
 	}
 
 }

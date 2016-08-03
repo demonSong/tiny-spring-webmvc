@@ -6,8 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+
 import demon.springframework.beans.BeanDefinition;
 import demon.springframework.beans.BeanPostProcessor;
+import demon.springframework.beans.config.InstantiationAwareBeanPostProcessor;
 
 /**
  * @author yihua.huang@dianping.com
@@ -19,6 +23,8 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 	private final List<String> beanDefinitionNames = new ArrayList<String>();
 
 	private List<BeanPostProcessor> beanPostProcessors = new ArrayList<BeanPostProcessor>();
+	
+	private boolean hasInstantiationAwareBeanPostProcessors;
 
 	@Override
 	public Object getBean(String name) throws Exception {
@@ -37,6 +43,10 @@ public abstract class AbstractBeanFactory implements BeanFactory {
             beanDefinition.setBean(bean);
 		}
 		return bean;
+	}
+	
+	public BeanDefinition getBeanDefinition(String beanName){
+		return this.beanDefinitionMap.get(beanName);
 	}
 
 	protected Object initializeBean(Object bean, String name) throws Exception {
@@ -59,6 +69,12 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 		beanDefinitionMap.put(name, beanDefinition);
 		beanDefinitionNames.add(name);
 	}
+	
+	public String[] getBeanDefinitionNames() {
+		synchronized (this.beanDefinitionMap) {
+			return StringUtils.toStringArray(this.beanDefinitionNames);
+		}
+	}
 
 	public void preInstantiateSingletons() throws Exception {
 		for (Iterator it = this.beanDefinitionNames.iterator(); it.hasNext();) {
@@ -70,8 +86,13 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 	protected Object doCreateBean(BeanDefinition beanDefinition) throws Exception {
 		Object bean = createBeanInstance(beanDefinition);
 		beanDefinition.setBean(bean);
-		applyPropertyValues(bean, beanDefinition);
-		return bean;
+		
+		//使用子类方法,并传入bean进行初始化
+		Object exposedObject =bean;
+		populateBean(beanDefinition.getClass().getName(), beanDefinition, bean);
+		
+		applyPropertyValues(exposedObject, beanDefinition);
+		return exposedObject;
 	}
 
 	protected void applyPropertyValues(Object bean, BeanDefinition beanDefinition) throws Exception {
@@ -79,7 +100,17 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 	}
 
 	public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) throws Exception {
+		Assert.notNull(beanPostProcessor, "BeanPostProcessor must not be null");
+		this.beanPostProcessors.remove(beanPostProcessor);
 		this.beanPostProcessors.add(beanPostProcessor);
+		//当使用了autowire processor后 便会设置标志位为true
+		if(beanPostProcessor instanceof InstantiationAwareBeanPostProcessor){
+			this.hasInstantiationAwareBeanPostProcessors =true;
+		}
+	}
+	
+	protected boolean hasInstantiationAwareBeanPostProcessors() {
+		return this.hasInstantiationAwareBeanPostProcessors;
 	}
 
 	public List getBeansForType(Class type) throws Exception {
@@ -91,5 +122,20 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 		}
 		return beans;
 	}
+	
+	public boolean isTypeMatch(String name, Class targetType){
+		if(targetType.isAssignableFrom(beanDefinitionMap.get(name).getBeanClass())){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	public List<BeanPostProcessor> getBeanPostProcessors() {
+		return this.beanPostProcessors;
+	}
+	
+	protected abstract void populateBean(String beanName,BeanDefinition mbd,Object bean)throws Exception;
 
 }
