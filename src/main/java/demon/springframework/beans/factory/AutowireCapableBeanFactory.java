@@ -150,4 +150,15 @@ public class AutowireCapableBeanFactory extends AbstractBeanFactory implements d
 		}
 		return StringUtils.toStringArray(result);
 	}
+
+	@Override
+	protected void invokeAwareMethods(String beanName, Object bean) {
+		if(bean instanceof BeanFactoryAware){
+			try {
+				((BeanFactoryAware) bean).setBeanFactory(AutowireCapableBeanFactory.this);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

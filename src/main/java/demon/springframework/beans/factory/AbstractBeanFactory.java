@@ -54,12 +54,15 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 			bean = beanPostProcessor.postProcessBeforeInitialization(bean, name);
 		}
 
-		// TODO:call initialize method
 		for (BeanPostProcessor beanPostProcessor : beanPostProcessors) {
             bean = beanPostProcessor.postProcessAfterInitialization(bean, name);
 		}
+		//初始化时,便回调这些aware methods方法
+		invokeAwareMethods(name, bean);
         return bean;
 	}
+	
+	protected abstract void invokeAwareMethods(final String beanName,final Object bean);
 
 	protected Object createBeanInstance(BeanDefinition beanDefinition) throws Exception {
 		return beanDefinition.getBeanClass().newInstance();
@@ -89,7 +92,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 		
 		//使用子类方法,并传入bean进行初始化
 		Object exposedObject =bean;
-		populateBean(beanDefinition.getClass().getName(), beanDefinition, bean);
+		populateBean(beanDefinition.getBeanClassName(), beanDefinition, bean);
 		
 		applyPropertyValues(exposedObject, beanDefinition);
 		return exposedObject;
@@ -115,6 +118,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 
 	public List getBeansForType(Class type) throws Exception {
 		List beans = new ArrayList<Object>();
+		//从beandefinition中获得所有的跟type相关的beans
 		for (String beanDefinitionName : beanDefinitionNames) {
 			if (type.isAssignableFrom(beanDefinitionMap.get(beanDefinitionName).getBeanClass())) {
 				beans.add(getBean(beanDefinitionName));

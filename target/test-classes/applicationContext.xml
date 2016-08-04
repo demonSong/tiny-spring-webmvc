@@ -16,6 +16,8 @@
 		<property name="name" value="demonSong" />
 	</bean>
 	
+	<bean id="autowiredAnnotationBeanPostProcessor" class="demon.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"></bean>
+	
 	<bean id="helloServiceImpl" class="demon.springframework.web.test.HelloServiceImpl"></bean>
 	<bean id="outputServiceImpl" class="demon.springframework.web.test.OutputServiceImpl"></bean>
 

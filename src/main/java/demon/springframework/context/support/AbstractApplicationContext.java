@@ -7,6 +7,7 @@ import org.springframework.core.convert.ConversionService;
 
 import demon.springframework.beans.BeanPostProcessor;
 import demon.springframework.beans.factory.AbstractBeanFactory;
+import demon.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import demon.springframework.context.ConfigurableApplicationContext;
 import demon.springframework.context.WebApplicationContext;
 import demon.springframework.web.context.ConfigurableWebApplicationContext;
@@ -43,6 +44,8 @@ public abstract class AbstractApplicationContext implements WebApplicationContex
 		}
 		//直接在代码中new出来,这样一个处理器
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
+		//源码使用一种工厂来产生符合条件的processor,我们直接new出来即可 
+		//这里的条件便是 把processor也当作是一种bean,所以暂时把它放在xml文件变成bean processor吧
 	}
 
 	protected void onRefresh() throws Exception{
