@@ -1,7 +1,7 @@
 package demon.springframework.web.test;
 
-import org.springframework.beans.factory.annotation.Autowired;
 
+import demon.springframework.beans.factory.annotation.Autowired;
 import demon.springframework.stereotype.Service;
 
 @Service

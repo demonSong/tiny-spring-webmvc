@@ -21,6 +21,8 @@ tiny-spring-webmvc
 
 实现ioc注解方式的实现
 
+封装到classpath*beanFactory中去，从而理解servlet初始化过程的contextLoader
+
 如何实现mvc 初始化后 xml文件和class文件的同时加载
 
 ### 3.step3-完成annotation进行ioc注解
@@ -34,3 +36,7 @@ autowire有两种实现方式:
 
 各种bean 在初始化的时候会调用一个beanAnnotationPostProcessor用来扫描所有field的注解,从而进行依赖注入
 
+完成autowire初始化field功能
+
+### 4.step4-完成对xml解析元素的封装和路由
+使用`beanDefinitionParserDelegate`来实现对元素的不同操作,任务ok

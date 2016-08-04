@@ -18,13 +18,15 @@ import demon.springframework.beans.PropertyValue;
 import demon.springframework.beans.PropertyValues;
 import demon.springframework.beans.config.InstantiationAwareBeanPostProcessor;
 import demon.springframework.beans.factory.config.DependencyDescriptor;
+import demon.springframework.beans.factory.support.BeanDefinitionRegistry;
 
 /**
  * 可自动装配内容的BeanFactory
  * 可以说该类是abstractFactory的增强实现
  * @author yihua.huang@dianping.com
  */
-public class AutowireCapableBeanFactory extends AbstractBeanFactory implements demon.springframework.beans.factory.config.AutowireCapableBeanFactory{
+public class AutowireCapableBeanFactory extends AbstractBeanFactory 
+		implements demon.springframework.beans.factory.config.AutowireCapableBeanFactory,BeanDefinitionRegistry{
 	
 	//实现了bean的依赖注入过程
 	protected void applyPropertyValues(Object bean, BeanDefinition mbd) throws Exception {
@@ -160,5 +162,25 @@ public class AutowireCapableBeanFactory extends AbstractBeanFactory implements d
 				e.printStackTrace();
 			}
 		}
+	}
+
+	//bean registry
+	@Override
+	public void removeBeanDefinition(String beanName) {
+	}
+
+	@Override
+	public boolean containsBeanDefinition(String beanName) {
+		return false;
+	}
+
+	@Override
+	public int getBeanDefinitionCount() {
+		return 0;
+	}
+
+	@Override
+	public boolean isBeanNameInUse(String beanName) {
+		return false;
 	}
 }

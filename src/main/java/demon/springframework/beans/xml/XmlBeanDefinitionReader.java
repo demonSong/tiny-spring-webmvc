@@ -16,48 +16,95 @@ import demon.springframework.BeanReference;
 import demon.springframework.beans.AbstractBeanDefinitionReader;
 import demon.springframework.beans.BeanDefinition;
 import demon.springframework.beans.PropertyValue;
+import demon.springframework.beans.factory.support.BeanDefinitionRegistry;
+import demon.springframework.beans.factory.xml.BeanDefinitionParserDelegate;
+import demon.springframework.beans.factory.xml.DefaultNamespaceHandlerResolver;
+import demon.springframework.beans.factory.xml.NamespaceHandlerResolver;
+import demon.springframework.beans.factory.xml.XmlReaderContext;
+import demon.springframework.beans.io.Resource;
 import demon.springframework.beans.io.ResourceLoader;
 
 /**
  * @author yihua.huang@dianping.com
  */
 public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
+	
+	private NamespaceHandlerResolver namespaceHandlerResolver;
 
+	public XmlBeanDefinitionReader(BeanDefinitionRegistry registry,ResourceLoader resourceLoader){
+		super(registry,resourceLoader);
+	}
+	
 	public XmlBeanDefinitionReader(ResourceLoader resourceLoader) {
 		super(resourceLoader);
+	}
+	
+	//getter setter
+	public void setNamespaceHandlerResolver(
+			NamespaceHandlerResolver namespaceHandlerResolver) {
+		this.namespaceHandlerResolver = namespaceHandlerResolver;
+	}
+	
+	//----
+	protected XmlReaderContext createReaderContext(Resource resource) {
+		if (this.namespaceHandlerResolver == null) {
+			this.namespaceHandlerResolver = createDefaultNamespaceHandlerResolver();
+		}
+		return new XmlReaderContext(resource,this,this.namespaceHandlerResolver);
+	}
+	
+	protected NamespaceHandlerResolver createDefaultNamespaceHandlerResolver() {
+		return new DefaultNamespaceHandlerResolver(getResourceLoader().getClassLoader());
 	}
 
 	@Override
 	public void loadBeanDefinitions(String location) throws Exception {
+		Resource resource =getResourceLoader().getResource(location);
 		InputStream inputStream = getResourceLoader().getResource(location).getInputStream();
-		doLoadBeanDefinitions(inputStream);
+		doLoadBeanDefinitions(inputStream,resource);
 	}
 
-	protected void doLoadBeanDefinitions(InputStream inputStream) throws Exception {
+	protected void doLoadBeanDefinitions(InputStream inputStream,Resource resource) throws Exception {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setNamespaceAware(true);
 		DocumentBuilder docBuilder = factory.newDocumentBuilder();
 		Document doc = docBuilder.parse(inputStream);
 		// 解析bean
-		registerBeanDefinitions(doc);
+		registerBeanDefinitions(doc,resource);
 		inputStream.close();
 	}
 
-	public void registerBeanDefinitions(Document doc) {
+	public void registerBeanDefinitions(Document doc,Resource resource) {
 		Element root = doc.getDocumentElement();
-
-		parseBeanDefinitions(root);
+		parseBeanDefinitions(root,resource);
 	}
 
-	protected void parseBeanDefinitions(Element root) {
+	/**
+	 * 源码在这里实现了一种策略模式，来实现对xml解析的可扩展性
+	 * delegate分为自定义element和默认element
+	 * @param root
+	 */
+	protected void parseBeanDefinitions(Element root,Resource resource) {
 		NodeList nl = root.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node node = nl.item(i);
 			if (node instanceof Element) {
 				Element ele = (Element) node;
 				processBeanDefinition(ele);
+				parseBeanDefinitions(ele, new BeanDefinitionParserDelegate(createReaderContext(resource)));
 			}
 		}
+		
+		//方法：预先检测是否为自定义的element，符合走原先逻辑，不符合走策略代理
+		//透传，在方法里进行区分
+		
 	}
+	
+	protected void parseBeanDefinitions(Element root,BeanDefinitionParserDelegate delegate) {
+		//+个是否为默认元素的判断
+		delegate.parseCustomElement(root);
+	}
+	
 
 	protected void processBeanDefinition(Element ele) {
 		String name = ele.getAttribute("id");

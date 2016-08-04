@@ -3,6 +3,7 @@ package demon.springframework.beans;
 import java.util.HashMap;
 import java.util.Map;
 
+import demon.springframework.beans.factory.support.BeanDefinitionRegistry;
 import demon.springframework.beans.io.ResourceLoader;
 
 /**
@@ -12,20 +13,31 @@ import demon.springframework.beans.io.ResourceLoader;
  */
 public abstract class AbstractBeanDefinitionReader implements BeanDefinitionReader {
 
-    private Map<String,BeanDefinition> registry;
+	private final BeanDefinitionRegistry registry;
+	
+    private Map<String,BeanDefinition> registrys;
 
     private ResourceLoader resourceLoader;
 
     protected AbstractBeanDefinitionReader(ResourceLoader resourceLoader) {
-        this.registry = new HashMap<String, BeanDefinition>();
-        this.resourceLoader = resourceLoader;
+        this(null, resourceLoader);
     }
 
+    protected AbstractBeanDefinitionReader(BeanDefinitionRegistry registry,ResourceLoader resourceLoader){
+    	this.registrys = new HashMap<String, BeanDefinition>();
+        this.resourceLoader = resourceLoader;
+        this.registry =registry;
+    }
+    
     public Map<String, BeanDefinition> getRegistry() {
-        return registry;
+        return registrys;
     }
 
     public ResourceLoader getResourceLoader() {
         return resourceLoader;
     }
+    
+    public final BeanDefinitionRegistry getBeanFactory() {
+		return this.registry;
+	}
 }

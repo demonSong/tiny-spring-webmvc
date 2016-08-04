@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--命名空间在xml中的作用也是值得研究的  -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:demo-context="http://www.demon.com/schema/context"
 	xsi:schemaLocation="
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
-	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
-	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
 	<!--设置annotation 需要扫描的包 -->
-	<context:component-scan base-package="demon.springframework.**.test" />
-	<context:component-scan base-package="demon.springframework.**.annotation" />
+	<demo-context:component-scan base-package="demon.springframework.**.test" />
+	<demo-context:component-scan base-package="demon.springframework.**.annotation" />
 	
 	<bean id="springService" class="demon.springframework.web.test.SpringService">
 		<property name="name" value="demonSong" />
 	</bean>
 	
 	<bean id="autowiredAnnotationBeanPostProcessor" class="demon.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"></bean>
-	
-	<bean id="helloServiceImpl" class="demon.springframework.web.test.HelloServiceImpl"></bean>
-	<bean id="outputServiceImpl" class="demon.springframework.web.test.OutputServiceImpl"></bean>
 
+	<!-- <bean id="helloServiceImpl" class="demon.springframework.web.test.HelloServiceImpl"></bean> 
+		<bean id="outputServiceImpl" class="demon.springframework.web.test.OutputServiceImpl"></bean> -->
 
 	<!--controller 映射关系的建立 -->
 	<bean id="add" class="demon.springframework.web.test.AddController"></bean>
 	<bean id="update" class="demon.springframework.web.test.UpdateController"></bean>
 
 	<!--有些processor是直接在代码中new出来的 -->
-
 </beans>

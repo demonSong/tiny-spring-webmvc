@@ -5,6 +5,7 @@ import java.util.Map;
 import demon.springframework.beans.BeanDefinition;
 import demon.springframework.beans.factory.AbstractBeanFactory;
 import demon.springframework.beans.factory.AutowireCapableBeanFactory;
+import demon.springframework.beans.factory.support.BeanDefinitionRegistry;
 import demon.springframework.beans.io.ResourceLoader;
 import demon.springframework.beans.xml.XmlBeanDefinitionReader;
 import demon.springframework.context.support.AbstractApplicationContext;
@@ -28,7 +29,14 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
 
 	@Override
 	protected void loadBeanDefinitions(AbstractBeanFactory beanFactory) throws Exception {
-		XmlBeanDefinitionReader xmlBeanDefinitionReader = new XmlBeanDefinitionReader(new ResourceLoader());
+		XmlBeanDefinitionReader xmlBeanDefinitionReader;
+		if(beanFactory instanceof AutowireCapableBeanFactory){
+			BeanDefinitionRegistry registry =(BeanDefinitionRegistry) beanFactory;
+			xmlBeanDefinitionReader= new XmlBeanDefinitionReader(registry,new ResourceLoader());
+		}
+		else {
+			xmlBeanDefinitionReader =new XmlBeanDefinitionReader(new ResourceLoader());
+		}
 		xmlBeanDefinitionReader.loadBeanDefinitions(configLocation);
 		for (Map.Entry<String, BeanDefinition> beanDefinitionEntry : xmlBeanDefinitionReader.getRegistry().entrySet()) {
 			beanFactory.registerBeanDefinition(beanDefinitionEntry.getKey(), beanDefinitionEntry.getValue());
