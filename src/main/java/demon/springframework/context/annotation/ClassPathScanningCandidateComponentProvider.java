@@ -103,6 +103,7 @@ public class ClassPathScanningCandidateComponentProvider {
 						}
 					}
 					catch (Throwable ex) {
+						ex.printStackTrace();
 					}
 				}	
 			}

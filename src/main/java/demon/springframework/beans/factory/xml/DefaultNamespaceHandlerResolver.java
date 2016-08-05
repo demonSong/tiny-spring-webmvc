@@ -57,11 +57,22 @@ public class DefaultNamespaceHandlerResolver implements NamespaceHandlerResolver
 							"] does not implement the [" + NamespaceHandler.class.getName() + "] interface");
 				}
 				NamespaceHandler namespaceHandler = (NamespaceHandler) BeanUtils.instantiateClass(handlerClass);
+				//NamespaceHandler namespaceHandler = (NamespaceHandler) handlerClass.newInstance();
 				//这里进行了namespacehandler的初始化操作
 				namespaceHandler.init();
 				handlerMappings.put(namespaceUri, namespaceHandler);
 				return namespaceHandler;
 			}
+			// catch (InstantiationException e) {
+			// throw new FatalBeanException("NamespaceHandler class [" +
+			// className + "] for namespace [" +
+			// namespaceUri + "] instantation erro", e);
+			// }
+			// catch (IllegalAccessException e) {
+			// throw new FatalBeanException("NamespaceHandler class [" +
+			// className + "] for namespace [" +
+			// namespaceUri + "] instantation erro", e);
+			// }
 			catch (ClassNotFoundException ex) {
 				throw new FatalBeanException("NamespaceHandler class [" + className + "] for namespace [" +
 						namespaceUri + "] not found", ex);

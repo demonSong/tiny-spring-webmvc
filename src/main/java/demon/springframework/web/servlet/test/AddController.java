@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import demon.springframework.web.servlet.mvc.Controller;
 
+@demon.springframework.stereotype.Controller
 public class AddController implements Controller {
 
 	@Override

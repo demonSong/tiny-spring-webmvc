@@ -101,7 +101,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	}
 	
 	protected void parseBeanDefinitions(Element root,BeanDefinitionParserDelegate delegate) {
-		//+个是否为默认元素的判断
+		//需添加是否为默认元素的判断
 		delegate.parseCustomElement(root);
 	}
 	

@@ -4,7 +4,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import demon.springframework.web.servlet.mvc.Controller;
+import demon.springframework.web.test.HelloServiceImpl;
 
+@demon.springframework.stereotype.Controller
 public class UpdateController implements Controller{
 	
 	@Override
@@ -12,5 +14,5 @@ public class UpdateController implements Controller{
 		// TODO Auto-generated method stub
 		System.out.println("hello this is update Controller");
 	}
-
+	
 }
