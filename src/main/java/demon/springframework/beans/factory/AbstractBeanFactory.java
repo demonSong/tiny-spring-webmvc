@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.aop.ThrowsAdvice;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import demon.springframework.beans.BeanDefinition;
@@ -16,13 +19,16 @@ import demon.springframework.beans.config.InstantiationAwareBeanPostProcessor;
 /**
  * @author yihua.huang@dianping.com
  */
-public abstract class AbstractBeanFactory implements BeanFactory {
+public abstract class AbstractBeanFactory implements ListableBeanFactory {
 
 	private Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<String, BeanDefinition>();
 
 	private final List<String> beanDefinitionNames = new ArrayList<String>();
 
 	private List<BeanPostProcessor> beanPostProcessors = new ArrayList<BeanPostProcessor>();
+	
+	/** 存储所有类型的beanNames*/
+	private final Map<Class<?>, String[]> allBeanNamesByType = new ConcurrentHashMap<Class<?>, String[]>(64);
 	
 	private boolean hasInstantiationAwareBeanPostProcessors;
 
@@ -116,7 +122,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 		return this.hasInstantiationAwareBeanPostProcessors;
 	}
 
-	public List getBeansForType(Class type) throws Exception {
+	public List getBeansForType(Class<?> type) throws Exception {
 		List beans = new ArrayList<Object>();
 		//从beandefinition中获得所有的跟type相关的beans
 		for (String beanDefinitionName : beanDefinitionNames) {
@@ -127,7 +133,40 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 		return beans;
 	}
 	
-	public boolean isTypeMatch(String name, Class targetType){
+	@Override
+	public Class<?> getType(String name){
+		try {
+			return getBean(name).getClass();
+		} catch (Exception e) {
+			throw new NoSuchBeanDefinitionException("没有找到{bean}");
+		}
+	}
+	
+	@Override
+	public String[] getBeanNamesForType(Class<?> type){
+		Map<Class<?>, String[]> cache =this.allBeanNamesByType;
+		String[] resolvedBeanNames= cache.get(type);
+		if(resolvedBeanNames !=null){
+			return resolvedBeanNames;
+		}
+		resolvedBeanNames =doGetBeanNamesForType(type);
+		cache.put(type, resolvedBeanNames);
+		return resolvedBeanNames;
+	}
+	
+	private String[] doGetBeanNamesForType(Class<?> type){
+		List<String> result = new ArrayList<String>();
+		String[] beanDefinitionNames = getBeanDefinitionNames();
+		for(String beanName :beanDefinitionNames){
+			boolean matchFound =isTypeMatch(beanName, type);
+			if(matchFound){
+				result.add(beanName);
+			}
+		}
+		return StringUtils.toStringArray(result);
+	}
+	
+	public boolean isTypeMatch(String name, Class<?> targetType){
 		if(targetType.isAssignableFrom(beanDefinitionMap.get(name).getBeanClass())){
 			return true;
 		}

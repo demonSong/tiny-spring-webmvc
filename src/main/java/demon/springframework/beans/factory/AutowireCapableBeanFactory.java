@@ -118,7 +118,7 @@ public class AutowireCapableBeanFactory extends AbstractBeanFactory
 	}
 	
 	protected Map<String, Object> findAutowireCandidates(
-			String beanName, Class requiredType, DependencyDescriptor descriptor) {
+			String beanName, Class<?> requiredType, DependencyDescriptor descriptor) {
 		//源码中为什么要多此一举呢?
 		Map<String, Object> result;
 		try {
@@ -134,7 +134,7 @@ public class AutowireCapableBeanFactory extends AbstractBeanFactory
 			return null;
 		}
 	}
-	public String[] getBeanNamesForType(Class type, boolean includeNonSingletons, boolean allowEagerInit) {
+	public String[] getBeanNamesForType(Class<?> type, boolean includeNonSingletons, boolean allowEagerInit) {
 		List<String> result = new ArrayList<String>();
 
 		// Check all bean definitions.

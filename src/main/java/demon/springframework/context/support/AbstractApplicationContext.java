@@ -2,6 +2,7 @@ package demon.springframework.context.support;
 
 import java.util.List;
 
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.convert.ConversionService;
 
@@ -55,6 +56,16 @@ public abstract class AbstractApplicationContext implements WebApplicationContex
 	@Override
 	public Object getBean(String name) throws Exception {
 		return beanFactory.getBean(name);
+	}
+	
+	@Override
+	public String[] getBeanNamesForType(Class<?> type) {
+		return beanFactory.getBeanNamesForType(type);
+	}
+	
+	@Override
+	public Class<?> getType(String name) throws NoSuchBeanDefinitionException {
+		return beanFactory.getType(name);
 	}
 	
 }

@@ -3,9 +3,11 @@ package demon.springframework.web.servlet.test;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import demon.springframework.web.context.bind.annotation.RequestMapping;
 import demon.springframework.web.servlet.mvc.Controller;
 
 @demon.springframework.stereotype.Controller
+@RequestMapping
 public class AddController implements Controller {
 
 	@Override

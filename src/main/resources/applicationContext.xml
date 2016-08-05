@@ -24,5 +24,7 @@
 			</props>
 		</property>
 	</bean>
+	
+	<bean id="requestMappingHandlerMapping" class="demon.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"></bean>
 
 </beans>

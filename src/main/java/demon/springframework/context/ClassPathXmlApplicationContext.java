@@ -42,5 +42,4 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
 			beanFactory.registerBeanDefinition(beanDefinitionEntry.getKey(), beanDefinitionEntry.getValue());
 		}
 	}
-
 }
