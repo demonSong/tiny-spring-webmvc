@@ -73,8 +73,6 @@ public class DispatcherServlet extends FrameworkServlet{
 			//但requestHandlerMapping初始化的顺序跟controller的读取顺序有关系
 			HandlerMapping hm = (HandlerMapping) context.getBean(HANDLER_MAPPING_BEAN_NAME);
 			matchingBeans.put(REQUEST_MAPPING_HANDLER_MAPPING, (HandlerMapping) context.getBean(REQUEST_MAPPING_HANDLER_MAPPING));
-			//-----------------------------------just a test-------------------------------------------//
-			((RequestMappingHandlerMapping) context.getBean(REQUEST_MAPPING_HANDLER_MAPPING)).afterPropertiesSet();
 			matchingBeans.put(HANDLER_MAPPING_BEAN_NAME, hm);
 			this.handlerMappings = new ArrayList<HandlerMapping>(matchingBeans.values());
 		}

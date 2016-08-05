@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.aop.ThrowsAdvice;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import demon.springframework.beans.BeanDefinition;
@@ -65,10 +64,26 @@ public abstract class AbstractBeanFactory implements ListableBeanFactory {
 		}
 		//初始化时,便回调这些aware methods方法
 		invokeAwareMethods(name, bean);
-        return bean;
+		
+		//初始化init方法
+		try {
+			invokeInitMethods(name, bean);
+		} catch (Throwable e) {
+			throw new BeanCreationException(
+					"Invocation of init method failed", e);
+		}
+		return bean;
 	}
 	
 	protected abstract void invokeAwareMethods(final String beanName,final Object bean);
+	
+	protected void invokeInitMethods(String beanName, final Object bean)
+			throws Throwable {
+		boolean isInitializingBean = (bean instanceof InitializingBean);
+		if(isInitializingBean){
+			((InitializingBean)bean).afterPropertiesSet();
+		}
+	}
 
 	protected Object createBeanInstance(BeanDefinition beanDefinition) throws Exception {
 		return beanDefinition.getBeanClass().newInstance();
