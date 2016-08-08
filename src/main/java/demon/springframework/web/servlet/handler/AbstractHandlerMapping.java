@@ -3,12 +3,15 @@ package demon.springframework.web.servlet.handler;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.BeansException;
-import org.springframework.web.servlet.HandlerExecutionChain;
+import org.springframework.util.Assert;
 
+import demon.springframework.core.util.AntPathMatcher;
+import demon.springframework.core.util.PathMatcher;
 import demon.springframework.web.context.support.WebApplicationObjectSupport;
 import demon.springframework.web.servlet.HandlerMapping;
 import demon.springframework.web.servlet.mvc.Controller;
 import demon.springframework.web.servlet.mvc.DefaultController;
+import demon.springframework.web.util.UrlPathHelper;
 
 /**
  * 源码中还继承了webApplicationObjectSupport
@@ -19,6 +22,10 @@ import demon.springframework.web.servlet.mvc.DefaultController;
 public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport implements HandlerMapping {
 
 	private Object defaultHandler;
+	
+	private UrlPathHelper urlPathHelper = new UrlPathHelper();
+
+	private PathMatcher pathMatcher = new AntPathMatcher();
 	
 	//拦截器在handlerMapping中的作用
 	//interceptors
@@ -63,5 +70,23 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 		else {
 			return new DefaultController();
 		}
+	}
+	
+	public void setUrlPathHelper(UrlPathHelper urlPathHelper) {
+		Assert.notNull(urlPathHelper, "UrlPathHelper must not be null");
+		this.urlPathHelper = urlPathHelper;
+	}
+
+	public UrlPathHelper getUrlPathHelper() {
+		return urlPathHelper;
+	}
+
+	public void setPathMatcher(PathMatcher pathMatcher) {
+		Assert.notNull(pathMatcher, "PathMatcher must not be null");
+		this.pathMatcher = pathMatcher;
+	}
+
+	public PathMatcher getPathMatcher() {
+		return this.pathMatcher;
 	}
 }

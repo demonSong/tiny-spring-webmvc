@@ -59,9 +59,7 @@ public abstract class AbstractBeanFactory implements ListableBeanFactory {
 			bean = beanPostProcessor.postProcessBeforeInitialization(bean, name);
 		}
 
-		for (BeanPostProcessor beanPostProcessor : beanPostProcessors) {
-            bean = beanPostProcessor.postProcessAfterInitialization(bean, name);
-		}
+		
 		//初始化时,便回调这些aware methods方法
 		invokeAwareMethods(name, bean);
 		
@@ -72,6 +70,11 @@ public abstract class AbstractBeanFactory implements ListableBeanFactory {
 			throw new BeanCreationException(
 					"Invocation of init method failed", e);
 		}
+		
+		for (BeanPostProcessor beanPostProcessor : beanPostProcessors) {
+            bean = beanPostProcessor.postProcessAfterInitialization(bean, name);
+		}
+		
 		return bean;
 	}
 	
