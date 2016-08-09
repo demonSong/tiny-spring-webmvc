@@ -18,7 +18,7 @@ public class AddController implements Controller {
 	
 	@RequestMapping(value="/sayHello",method=RequestMethod.POST)
 	public void sayHelloToMVC(HttpServletRequest request,HttpServletResponse response){
-		
+		System.out.println("hello this is sayHello method");
 	}
 	
 }

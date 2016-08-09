@@ -31,6 +31,13 @@ public class HandlerMethod {
 		this.method = method;
 	}
 	
+	protected HandlerMethod(HandlerMethod handlerMethod){
+		Assert.notNull(handlerMethod,"HandlerMethod is requeired");
+		this.bean=handlerMethod.bean;
+		this.beanFactory=handlerMethod.beanFactory;
+		this.method=handlerMethod.method;
+	}
+	
 	private HandlerMethod(HandlerMethod handlerMethod, Object handler) {
 		Assert.notNull(handlerMethod, "HandlerMethod is required");
 		Assert.notNull(handler, "Handler object is required");
@@ -51,5 +58,12 @@ public class HandlerMethod {
 		}
 		return new HandlerMethod(this,handler);
 	}
-
+	
+	public Method getMethod() {
+		return this.method;
+	}
+	
+	public Object getBean() {
+		return this.bean;
+	}
 }

@@ -8,6 +8,7 @@ import org.springframework.util.Assert;
 import demon.springframework.core.util.AntPathMatcher;
 import demon.springframework.core.util.PathMatcher;
 import demon.springframework.web.context.support.WebApplicationObjectSupport;
+import demon.springframework.web.servlet.HandlerExecutionChain;
 import demon.springframework.web.servlet.HandlerMapping;
 import demon.springframework.web.servlet.mvc.Controller;
 import demon.springframework.web.servlet.mvc.DefaultController;
@@ -44,7 +45,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	}
 	
 	@Override
-	public final Controller getHandler(HttpServletRequest request) throws Exception {
+	public final HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
 		Object handler =getHandlerInternal(request);
 		if(handler == null){
 			handler =getDefaultHandler();
@@ -57,7 +58,8 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 			//通过 applicationContext.getBean方法获得处理器
 			handler =getApplicationContext().getBean(handlerName);
 		}
-		return getHandlerExecutionController(handler, request);
+		//进行了包装转换
+		return getHandlerExecutionChain(handler, request);
 	}
 
 	protected abstract Object getHandlerInternal(HttpServletRequest request) throws Exception;
@@ -70,6 +72,13 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 		else {
 			return new DefaultController();
 		}
+	}
+	
+	protected HandlerExecutionChain getHandlerExecutionChain(Object handler,HttpServletRequest request){
+ 		HandlerExecutionChain chain =(handler instanceof HandlerExecutionChain ? (HandlerExecutionChain)handler :
+			new HandlerExecutionChain(handler));
+		//不需要加解释器
+		return chain;
 	}
 	
 	public void setUrlPathHelper(UrlPathHelper urlPathHelper) {

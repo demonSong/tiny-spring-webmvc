@@ -27,4 +27,6 @@
 	
 	<bean id="requestMappingHandlerMapping" class="demon.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"></bean>
 
+	<bean id="handlerAdapter" class="demon.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"></bean>
+	<bean id="requestMappingHandlerAdapter" class="demon.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"></bean>
 </beans>
