@@ -14,11 +14,12 @@ import org.springframework.util.StringUtils;
 import demon.springframework.beans.BeanDefinition;
 import demon.springframework.beans.BeanPostProcessor;
 import demon.springframework.beans.config.InstantiationAwareBeanPostProcessor;
+import demon.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 /**
  * @author yihua.huang@dianping.com
  */
-public abstract class AbstractBeanFactory implements ListableBeanFactory {
+public abstract class AbstractBeanFactory implements ListableBeanFactory ,ConfigurableBeanFactory{
 
 	private Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<String, BeanDefinition>();
 
@@ -33,11 +34,17 @@ public abstract class AbstractBeanFactory implements ListableBeanFactory {
 
 	@Override
 	public Object getBean(String name) throws Exception {
+		return doGetBean(name);
+	}
+
+	
+	protected Object doGetBean(String name) throws Exception {
 		BeanDefinition beanDefinition = beanDefinitionMap.get(name);
 		if (beanDefinition == null) {
 			throw new IllegalArgumentException("No bean named " + name + " is defined");
 		}
 		Object bean = beanDefinition.getBean();
+		//bean的初始化过程
 		if (bean == null) {
 			//在bean进行初始化时 会先创建bean
 			bean = doCreateBean(beanDefinition);
@@ -47,6 +54,7 @@ public abstract class AbstractBeanFactory implements ListableBeanFactory {
             //类似于缓存,在map中获得beandefinition中后,下次getbean直接可以在definition中取
             beanDefinition.setBean(bean);
 		}
+		
 		return bean;
 	}
 	
@@ -111,6 +119,9 @@ public abstract class AbstractBeanFactory implements ListableBeanFactory {
 	}
 
 	protected Object doCreateBean(BeanDefinition beanDefinition) throws Exception {
+		//根据获得beanDefinition进行判断
+		//if singleton 走getSingleton逻辑
+		
 		Object bean = createBeanInstance(beanDefinition);
 		beanDefinition.setBean(bean);
 		

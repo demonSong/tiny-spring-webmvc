@@ -27,8 +27,10 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
 		refresh();
 	}
 
+	//是否可以用处理器来完成对bean xml文件解析处理的功能
 	@Override
 	protected void loadBeanDefinitions(AbstractBeanFactory beanFactory) throws Exception {
+		//做了xml Reader分发,并且完成注册功能
 		XmlBeanDefinitionReader xmlBeanDefinitionReader;
 		if(beanFactory instanceof AutowireCapableBeanFactory){
 			BeanDefinitionRegistry registry =(BeanDefinitionRegistry) beanFactory;

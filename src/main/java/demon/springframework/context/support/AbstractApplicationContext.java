@@ -29,8 +29,12 @@ public abstract class AbstractApplicationContext implements WebApplicationContex
 
 	public void refresh() throws Exception {
 		//防止多个线程的进入
+		//所以说LoadBeanDefintion的函数完全可以由处理器来完成替代
 		loadBeanDefinitions(beanFactory);
+		
+		//这里只是完成了对BeanPostProcessor的注册,而没有执行调用方法
 		registerBeanPostProcessors(beanFactory);
+		
 		onRefresh();
 		
 	}

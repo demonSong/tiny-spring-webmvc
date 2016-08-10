@@ -59,6 +59,20 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>4.0.5.RELEASE</version>
 		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-jms -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-jms</artifactId>
+		    <version>4.0.5.RELEASE</version>
+		</dependency>
+		
+		
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-tx</artifactId>
+		    <version>4.0.5.RELEASE</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
@@ -75,6 +89,11 @@
 			<groupId>com.vip.venus</groupId>
 			<artifactId>venus-core</artifactId>
 			<version>1.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>demon.test</groupId>
+			<artifactId>rpc-service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

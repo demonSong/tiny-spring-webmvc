@@ -44,3 +44,11 @@ autowire有两种实现方式:
 ### 5.step5-增加对RequestMapping的实现
 实现对requestMapping 1.初始化注册 2.加载匹配 
 获得handlermethod,最终通过反射来实现方法的调用
+需要思考参数列表与web请求如何建立映射关系
+
+### 6.step6-理解spring-rmi 远程调用实现原理
+学习RmiProxyFactoryBean
+首先需要搭建factoryBean,需要完成对默认基本configureBeanDefinition的一些参数的初始化
+对bean进行xml解析时,注册是通过PostProcessorRegistrationDelegate这些处理器来完成的.
+
+
