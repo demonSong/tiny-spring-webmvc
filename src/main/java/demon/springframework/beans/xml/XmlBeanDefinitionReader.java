@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -29,7 +31,11 @@ import demon.springframework.beans.io.ResourceLoader;
  */
 public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	
+	public static final String BEAN_ELEMENT = BeanDefinitionParserDelegate.BEAN_ELEMENT;
+	
 	private NamespaceHandlerResolver namespaceHandlerResolver;
+	
+	protected final Log logger = LogFactory.getLog(getClass());
 
 	public XmlBeanDefinitionReader(BeanDefinitionRegistry registry,ResourceLoader resourceLoader){
 		super(registry,resourceLoader);
@@ -85,6 +91,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @param root
 	 */
 	protected void parseBeanDefinitions(Element root,Resource resource) {
+		parseBeanDefinitions(root, new BeanDefinitionParserDelegate(createReaderContext(resource)));
 		NodeList nl = root.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node node = nl.item(i);
@@ -100,11 +107,41 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		
 	}
 	
+	/**
+	 * 重新增加beanDefinition注册逻辑
+	 * @param root
+	 * @param delegate
+	 */
 	protected void parseBeanDefinitions(Element root,BeanDefinitionParserDelegate delegate) {
 		//需添加是否为默认元素的判断
-		delegate.parseCustomElement(root);
+		if(delegate.isDefaultNamespace(root)){
+			NodeList n1 =root.getChildNodes();
+			for (int i = 0; i < n1.getLength(); i++) {
+				Node node =n1.item(i);
+				if(node instanceof Element){
+					Element ele =(Element) node;
+					if(delegate.isDefaultNamespace(ele)){
+						parseDefaultElement(ele,delegate);
+					}
+				}
+			}
+		}
+		else{
+			delegate.parseCustomElement(root);
+		}
 	}
 	
+
+	private void parseDefaultElement(Element ele,BeanDefinitionParserDelegate delegate) {
+		if(delegate.nodeNameEquals(ele, BEAN_ELEMENT)){
+			processBeanDefinition(ele,delegate);
+		}
+	}
+
+	
+	protected void processBeanDefinition(Element ele,BeanDefinitionParserDelegate delegate) {
+		
+	}
 
 	protected void processBeanDefinition(Element ele) {
 		String name = ele.getAttribute("id");
