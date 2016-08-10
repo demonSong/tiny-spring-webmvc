@@ -51,4 +51,6 @@ autowire有两种实现方式:
 首先需要搭建factoryBean,需要完成对默认基本configureBeanDefinition的一些参数的初始化
 对bean进行xml解析时,注册是通过PostProcessorRegistrationDelegate这些处理器来完成的.
 
+#### 6.1重构BeanDefinition-理解SINGLETON && PROTOTYPE
+
 
