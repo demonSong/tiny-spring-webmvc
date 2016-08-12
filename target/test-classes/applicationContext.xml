@@ -23,8 +23,8 @@
 		<bean id="outputServiceImpl" class="demon.springframework.web.test.OutputServiceImpl"></bean> -->
 
 	<!--controller 映射关系的建立 -->
-	<bean id="add" class="demon.springframework.web.test.AddController"></bean>
-	<bean id="update" class="demon.springframework.web.test.UpdateController"></bean>
+	<bean id="addController" class="demon.springframework.web.test.AddController"></bean>
+	<bean id="updateController" class="demon.springframework.web.test.UpdateController"></bean>
 
 	<!--有些processor是直接在代码中new出来的 -->
 

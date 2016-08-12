@@ -6,23 +6,38 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.BeanDefinitionStoreException;
+import org.springframework.beans.factory.CannotLoadBeanClassException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import demon.springframework.beans.BeanDefinition;
 import demon.springframework.beans.BeanPostProcessor;
+import demon.springframework.beans.DmnBeanDefinition;
 import demon.springframework.beans.config.InstantiationAwareBeanPostProcessor;
 import demon.springframework.beans.factory.config.ConfigurableBeanFactory;
+import demon.springframework.beans.factory.support.BeanDefinitionRegistry;
+import demon.springframework.beans.factory.support.FactoryBeanRegistrySupport;
+import demon.springframework.beans.factory.support.RootBeanDefinition;
 
 /**
  * @author yihua.huang@dianping.com
  */
-public abstract class AbstractBeanFactory implements ListableBeanFactory ,ConfigurableBeanFactory{
+public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport implements ListableBeanFactory ,ConfigurableBeanFactory,BeanDefinitionRegistry{
 
 	private Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<String, BeanDefinition>();
+	
+	private Map<String, DmnBeanDefinition> testBeanDefinitionMap = new ConcurrentHashMap<String, DmnBeanDefinition>();
+	
+	private ClassLoader beanClassLoader =ClassUtils.getDefaultClassLoader();
 
+	private final Map<String, RootBeanDefinition> mergedBeanDefinitions =
+			new ConcurrentHashMap<String, RootBeanDefinition>(64);
+	
 	private final List<String> beanDefinitionNames = new ArrayList<String>();
 
 	private List<BeanPostProcessor> beanPostProcessors = new ArrayList<BeanPostProcessor>();
@@ -34,6 +49,9 @@ public abstract class AbstractBeanFactory implements ListableBeanFactory ,Config
 
 	@Override
 	public Object getBean(String name) throws Exception {
+		if(name.equals("rmiHelloWorldService")){
+			return doGetBean(name,null,null,false);
+		}
 		return doGetBean(name);
 	}
 
@@ -54,12 +72,90 @@ public abstract class AbstractBeanFactory implements ListableBeanFactory ,Config
             //类似于缓存,在map中获得beandefinition中后,下次getbean直接可以在definition中取
             beanDefinition.setBean(bean);
 		}
-		
 		return bean;
 	}
 	
+	protected<T> T doGetBean(final String name,final Class<T> requeiredType,final Object[] args,boolean typeCheckOnly )
+			throws BeansException{
+		
+		Object bean;
+		Object sharedInstance;
+		
+		final RootBeanDefinition mbd =getMergedLocalBeanDefinition(name);
+		//create bean instance 
+		if(mbd.isSingleton()){
+			sharedInstance =getSingleton(name,new ObjectFactory<Object>() {
+				@Override
+				public Object getObject() throws BeansException {
+					return createBean(name,mbd,args);
+				}
+			});
+		}
+		
+		
+		return null;
+	}
+	
+	protected abstract Object createBean(String beanName, RootBeanDefinition mbd, Object[] args)
+			throws BeanCreationException;
+	
+	protected RootBeanDefinition getMergedLocalBeanDefinition(String beanName) throws BeansException {
+		// Quick check on the concurrent map first, with minimal locking.
+		RootBeanDefinition mbd = this.mergedBeanDefinitions.get(beanName);
+		if (mbd != null) {
+			return mbd;
+		}
+		return getMergedBeanDefinition(beanName, getTestBeanDefinition(beanName));
+	}
+	
+	protected RootBeanDefinition getMergedBeanDefinition(String beanName, DmnBeanDefinition bd)
+			throws BeanDefinitionStoreException {
+
+		return getMergedBeanDefinition(beanName, bd, null);
+	}
+	
+	protected RootBeanDefinition getMergedBeanDefinition(
+			String beanName, DmnBeanDefinition bd, DmnBeanDefinition containingBd)
+			throws BeanDefinitionStoreException {
+		synchronized (this.mergedBeanDefinitions) {
+			RootBeanDefinition mbd =null;
+			
+			if(containingBd ==null){
+				mbd=this.mergedBeanDefinitions.get(beanName);
+			}
+			
+			if(mbd ==null){
+				if(bd.getParentName() ==null){
+					if(bd instanceof RootBeanDefinition){
+						mbd =((RootBeanDefinition) bd).cloneBeanDefinition();
+					}
+					else {
+						mbd =new RootBeanDefinition(bd);
+					}
+				}
+				else{
+					//child bean definition:needs to be merged with parent
+				}
+			
+				if(!StringUtils.hasLength(mbd.getScope())){
+					mbd.setScope(RootBeanDefinition.SCOPE_SINGLETON);
+				}
+				
+				if(containingBd ==null){
+					this.mergedBeanDefinitions.put(beanName, mbd);
+				}
+			}
+			return mbd;
+		}
+	}
+	
+	
 	public BeanDefinition getBeanDefinition(String beanName){
 		return this.beanDefinitionMap.get(beanName);
+	}
+	
+	public DmnBeanDefinition getTestBeanDefinition(String beanName){
+		return this.testBeanDefinitionMap.get(beanName);
 	}
 
 	protected Object initializeBean(Object bean, String name) throws Exception {
@@ -100,9 +196,16 @@ public abstract class AbstractBeanFactory implements ListableBeanFactory ,Config
 		return beanDefinition.getBeanClass().newInstance();
 	}
 
+	@Override
 	public void registerBeanDefinition(String name, BeanDefinition beanDefinition) throws Exception {
 		beanDefinitionMap.put(name, beanDefinition);
 		beanDefinitionNames.add(name);
+	}
+	
+	@Override
+	public void registerBeanDefinition(String beanName,
+			DmnBeanDefinition beanDefinition) throws Exception {
+		testBeanDefinitionMap.put(beanName, beanDefinition);
 	}
 	
 	public String[] getBeanDefinitionNames() {
@@ -129,6 +232,7 @@ public abstract class AbstractBeanFactory implements ListableBeanFactory ,Config
 		Object exposedObject =bean;
 		populateBean(beanDefinition.getBeanClassName(), beanDefinition, bean);
 		
+		//需要重写applyPropertyValues方法
 		applyPropertyValues(exposedObject, beanDefinition);
 		return exposedObject;
 	}
@@ -162,6 +266,35 @@ public abstract class AbstractBeanFactory implements ListableBeanFactory ,Config
 		return beans;
 	}
 	
+	protected Class<?> resolveBeanClass(final RootBeanDefinition mbd, String beanName, final Class<?>... typesToMatch)
+			throws CannotLoadBeanClassException {
+		try {
+			if(mbd.hasBeanClass()){
+				return mbd.getBeanClass();
+			}
+			else{
+				return doResolveBeanClass(mbd,typesToMatch);
+			}
+		} catch (ClassNotFoundException e) {
+			throw new CannotLoadBeanClassException(mbd.toString(), beanName, mbd.getBeanClassName(), e);
+		}
+	}
+	
+	private Class<?> doResolveBeanClass(RootBeanDefinition mbd, Class<?>... typesToMatch) throws ClassNotFoundException {
+		//临时的classLoader
+		return mbd.resolveBeanClass(getBeanClassLoader());
+	}
+	
+	@Override
+	public void setBeanClassLoader(ClassLoader beanClassLoader) {
+		this.beanClassLoader = (beanClassLoader != null ? beanClassLoader : ClassUtils.getDefaultClassLoader());
+	}
+
+	@Override
+	public ClassLoader getBeanClassLoader() {
+		return this.beanClassLoader;
+	}
+
 	@Override
 	public Class<?> getType(String name){
 		try {

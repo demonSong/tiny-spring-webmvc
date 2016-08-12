@@ -7,4 +7,6 @@ package demon.springframework.beans;
 public interface BeanDefinitionReader {
 
     void loadBeanDefinitions(String location) throws Exception;
+    
+    ClassLoader getBeanClassLoader();
 }

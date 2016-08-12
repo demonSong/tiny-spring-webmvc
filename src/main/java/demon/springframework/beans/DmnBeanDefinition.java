@@ -10,6 +10,10 @@ public interface DmnBeanDefinition {
 	
 	void setBeanClassName(String beanClassName);
 	
+	String getParentName();
+
+	void setParentName(String parentName);
+	
 	/**
 	 * 支持单例
 	 * @return
@@ -19,6 +23,11 @@ public interface DmnBeanDefinition {
 	void setScope(String scope);
 	
 	boolean isSingleton();
+
+	/**
+	 * 增加属性
+	 */
+	MutablePropertyValues getPropertyValues();
 	
 	/**
 	 * Return a human-readable description of this bean definition.

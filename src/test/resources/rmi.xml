@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--命名空间在xml中的作用也是值得研究的 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+	<!--设置annotation 需要扫描的包 -->
+
+	<bean id="springService" class="demon.springframework.web.test.SpringService">
+		<property name="name" value="demonSong" />
+	</bean>
+
+	<!--RPC远程调用服务 -->
+	<bean id="rmiHelloWorldService" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">
+		<property name="serviceUrl" value="rmi://127.0.0.1:1199/HelloWorldService" />
+		<property name="serviceInterface" value="demon.test.service.HelloWorldService" />
+	</bean>
+
+</beans>

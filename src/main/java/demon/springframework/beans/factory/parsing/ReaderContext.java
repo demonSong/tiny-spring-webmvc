@@ -13,4 +13,5 @@ public class ReaderContext {
 	public Resource getResource() {
 		return resource;
 	}
+	
 }

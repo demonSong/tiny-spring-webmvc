@@ -1,6 +1,7 @@
 package demon.springframework.context.support;
 
 import demon.springframework.beans.BeanDefinition;
+import demon.springframework.beans.DmnBeanDefinition;
 import demon.springframework.beans.factory.AbstractBeanFactory;
 import demon.springframework.beans.factory.AutowireCapableBeanFactory;
 import demon.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -28,6 +29,12 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 	public void registerBeanDefinition(String beanName,
 			BeanDefinition beanDefinition) throws Exception{
 		this.beanFactory.registerBeanDefinition(beanName, beanDefinition);
+	}
+	
+	@Override
+	public void registerBeanDefinition(String beanName,
+			DmnBeanDefinition beanDefinition) throws Exception {
+		
 	}
 
 	@Override
@@ -58,5 +65,6 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 	public boolean isBeanNameInUse(String beanName) {
 		return false;
 	}
+
 
 }

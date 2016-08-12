@@ -30,4 +30,8 @@ public class XmlReaderContext extends ReaderContext{
 	public final ResourceLoader getResourceLoader() {
 		return this.reader.getResourceLoader();
 	}
+	
+	public final ClassLoader getBeanClassLoader() {
+		return this.reader.getBeanClassLoader();
+	}
 }

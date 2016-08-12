@@ -18,6 +18,7 @@ import demon.springframework.beans.PropertyValue;
 import demon.springframework.beans.PropertyValues;
 import demon.springframework.beans.config.InstantiationAwareBeanPostProcessor;
 import demon.springframework.beans.factory.config.DependencyDescriptor;
+import demon.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import demon.springframework.beans.factory.support.BeanDefinitionRegistry;
 
 /**
@@ -25,8 +26,9 @@ import demon.springframework.beans.factory.support.BeanDefinitionRegistry;
  * 可以说该类是abstractFactory的增强实现
  * @author yihua.huang@dianping.com
  */
-public class AutowireCapableBeanFactory extends AbstractBeanFactory 
+public class AutowireCapableBeanFactory extends AbstractAutowireCapableBeanFactory 
 		implements demon.springframework.beans.factory.config.AutowireCapableBeanFactory,BeanDefinitionRegistry{
+	
 	
 	//实现了bean的依赖注入过程
 	protected void applyPropertyValues(Object bean, BeanDefinition mbd) throws Exception {

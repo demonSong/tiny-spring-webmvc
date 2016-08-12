@@ -18,8 +18,11 @@ import demon.springframework.BeanReference;
 import demon.springframework.beans.AbstractBeanDefinitionReader;
 import demon.springframework.beans.BeanDefinition;
 import demon.springframework.beans.PropertyValue;
+import demon.springframework.beans.factory.config.TestBeanDefinitionHolder;
+import demon.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import demon.springframework.beans.factory.support.BeanDefinitionRegistry;
 import demon.springframework.beans.factory.xml.BeanDefinitionParserDelegate;
+import demon.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader;
 import demon.springframework.beans.factory.xml.DefaultNamespaceHandlerResolver;
 import demon.springframework.beans.factory.xml.NamespaceHandlerResolver;
 import demon.springframework.beans.factory.xml.XmlReaderContext;
@@ -35,6 +38,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	
 	private NamespaceHandlerResolver namespaceHandlerResolver;
 	
+	private DefaultBeanDefinitionDocumentReader documentReader =new DefaultBeanDefinitionDocumentReader();
+	
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	public XmlBeanDefinitionReader(BeanDefinitionRegistry registry,ResourceLoader resourceLoader){
@@ -43,6 +48,10 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	
 	public XmlBeanDefinitionReader(ResourceLoader resourceLoader) {
 		super(resourceLoader);
+	}
+	
+	public DefaultBeanDefinitionDocumentReader getDocumentReader() {
+		return this.documentReader;
 	}
 	
 	//getter setter
@@ -82,6 +91,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 	public void registerBeanDefinitions(Document doc,Resource resource) {
 		Element root = doc.getDocumentElement();
+		XmlReaderContext readerContext =createReaderContext(resource);
+		getDocumentReader().registerBeanDefinitions(doc, readerContext);
 		parseBeanDefinitions(root,resource);
 	}
 
@@ -91,14 +102,15 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @param root
 	 */
 	protected void parseBeanDefinitions(Element root,Resource resource) {
-		parseBeanDefinitions(root, new BeanDefinitionParserDelegate(createReaderContext(resource)));
+		
+		parseBeanDefinitions(root, new BeanDefinitionParserDelegate(getDocumentReader().getReaderContext()));
 		NodeList nl = root.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node node = nl.item(i);
 			if (node instanceof Element) {
 				Element ele = (Element) node;
 				processBeanDefinition(ele);
-				parseBeanDefinitions(ele, new BeanDefinitionParserDelegate(createReaderContext(resource)));
+				parseBeanDefinitions(ele, new BeanDefinitionParserDelegate(getDocumentReader().getReaderContext()));
 			}
 		}
 		
@@ -140,6 +152,15 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 	
 	protected void processBeanDefinition(Element ele,BeanDefinitionParserDelegate delegate) {
+		TestBeanDefinitionHolder bdholder =delegate.parseBeanDefinitionElement(ele);
+		if(bdholder !=null){
+			//需要注册到beanFactory所实现的注册接口中去
+			try {
+				BeanDefinitionReaderUtils.registerBeanDefinition(bdholder, getBeanFactory());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		
 	}
 
@@ -153,6 +174,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		BeanDefinition beanDefinition = new BeanDefinition();
 		processProperty(ele, beanDefinition);
 		beanDefinition.setBeanClassName(className);
+		//需要注册在beanfactory中去
 		getRegistry().put(name, beanDefinition);
 	}
 

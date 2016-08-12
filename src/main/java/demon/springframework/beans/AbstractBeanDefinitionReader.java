@@ -18,6 +18,8 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
     private Map<String,BeanDefinition> registrys;
 
     private ResourceLoader resourceLoader;
+    
+    private ClassLoader beanClassLoader;
 
     protected AbstractBeanDefinitionReader(ResourceLoader resourceLoader) {
         this(null, resourceLoader);
@@ -39,5 +41,14 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
     
     public final BeanDefinitionRegistry getBeanFactory() {
 		return this.registry;
+	}
+    
+    public void setBeanClassLoader(ClassLoader beanClassLoader) {
+		this.beanClassLoader = beanClassLoader;
+	}
+
+	@Override
+	public ClassLoader getBeanClassLoader() {
+		return this.beanClassLoader;
 	}
 }

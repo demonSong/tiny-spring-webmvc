@@ -1,6 +1,9 @@
 package demon.springframework.beans.factory.support;
 
+import org.springframework.util.ClassUtils;
+
 import demon.springframework.beans.DmnBeanDefinition;
+import demon.springframework.beans.MutablePropertyValues;
 
 public abstract class AbstractBeanDefinition implements DmnBeanDefinition{
 	
@@ -11,12 +14,27 @@ public abstract class AbstractBeanDefinition implements DmnBeanDefinition{
 	
 	private String scope =SCOPE_DEFAULT;
 	
+	private MutablePropertyValues propertyValues;
+	
 	private String description;
 	
-	protected AbstractBeanDefinition(){}
+	protected AbstractBeanDefinition(){
+		this(null,null);
+	}
+	
+	/*
+	 * 构造器暂时不需要构造constructor args
+	 */
+	protected AbstractBeanDefinition(String cargs,MutablePropertyValues pvs){
+		setPropertyValues(pvs);
+	}
 	
 	protected AbstractBeanDefinition(DmnBeanDefinition original){
+		setParentName(original.getParentName());
+		setBeanClassName(original.getBeanClassName());
+		setPropertyValues(new MutablePropertyValues(original.getPropertyValues()));
 		setScope(original.getScope());
+		
 	}
 
 	@Override
@@ -45,6 +63,10 @@ public abstract class AbstractBeanDefinition implements DmnBeanDefinition{
 		return this.description;
 	}
 	
+	public boolean hasBeanClass(){
+		return(this.beanClass instanceof Class);
+	}
+	
 	public void setBeanClass(Class<?> beanClass) {
 		this.beanClass = beanClass;
 	}
@@ -61,6 +83,18 @@ public abstract class AbstractBeanDefinition implements DmnBeanDefinition{
 		return (Class<?>) beanClassObject;
 	}
 	
+	public Class<?> resolveBeanClass(ClassLoader classLoader) throws ClassNotFoundException {
+		String className = getBeanClassName();
+		if (className == null) {
+			return null;
+		}
+		Class<?> resolvedClass = ClassUtils.forName(className, classLoader);
+		this.beanClass = resolvedClass;
+		return resolvedClass;
+	}
+	
+	public abstract AbstractBeanDefinition cloneBeanDefinition();
+	
 	@Override
 	public void setBeanClassName(String beanClassName) {
 		this.beanClass =beanClassName;
@@ -75,6 +109,15 @@ public abstract class AbstractBeanDefinition implements DmnBeanDefinition{
 		else{
 			return (String) beanClassObject;
 		}
+	}
+	
+	public void setPropertyValues(MutablePropertyValues propertyValues) {
+		this.propertyValues = (propertyValues != null ? propertyValues : new MutablePropertyValues());
+	}
+	
+	@Override
+	public MutablePropertyValues getPropertyValues() {
+		return this.propertyValues;
 	}
 	
 	@Override
