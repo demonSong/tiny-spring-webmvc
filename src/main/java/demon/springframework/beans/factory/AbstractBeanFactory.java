@@ -11,6 +11,8 @@ import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.CannotLoadBeanClassException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.config.BeanExpressionContext;
+import org.springframework.beans.factory.config.Scope;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
@@ -339,6 +341,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	
 	public List<BeanPostProcessor> getBeanPostProcessors() {
 		return this.beanPostProcessors;
+	}
+	
+	public Object evaluateBeanDefinitionString(String value, DmnBeanDefinition beanDefinition) {
+		return null;
 	}
 	
 	protected abstract void populateBean(String beanName,BeanDefinition mbd,Object bean)throws Exception;

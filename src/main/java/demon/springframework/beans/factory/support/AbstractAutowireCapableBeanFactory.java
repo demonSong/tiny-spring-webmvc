@@ -60,12 +60,21 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			original = Arrays.asList(pvs.getPropertyValues());
 		}
 		
+		BeanDefinitionValueResolver valueResolver =new BeanDefinitionValueResolver(this, beanName, mbd);
+		
 		List<TestPropertyValue> deepCopy =new ArrayList<TestPropertyValue>(original.size());
 		boolean resolveNecessary =false;
 		for(TestPropertyValue pv : original){
-			String propertyName =pv.getName();
-			Object originalValue = pv.getValue();
-			System.out.println(propertyName +originalValue);
+			if(pv.isConverted()){
+				deepCopy.add(pv);
+			}
+			else {
+				String propertyName =pv.getName();
+				Object originalValue = pv.getValue();
+				Object resolvedValue =valueResolver.resolveValueIfNecessary(pv, originalValue);
+				Object convertedValue =resolvedValue;
+				System.out.println(propertyName +originalValue);	
+			}
 		}
 
 	}
