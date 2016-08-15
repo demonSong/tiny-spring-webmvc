@@ -1,5 +1,6 @@
 package demon.springframework.beans;
 
+import org.springframework.beans.PropertyValue;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
@@ -20,6 +21,12 @@ public class TestPropertyValue {
 	public TestPropertyValue(String name,Object value){
 		this.name =name;
 		this.value=value;
+	}
+	
+	public TestPropertyValue(TestPropertyValue original, Object newValue) {
+		Assert.notNull(original, "Original must not be null");
+		this.name = original.getName();
+		this.value = newValue;
 	}
 	
 	public TestPropertyValue(TestPropertyValue original){

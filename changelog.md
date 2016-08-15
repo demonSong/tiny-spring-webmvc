@@ -11,6 +11,8 @@
 
 ### 3.具体的策略采用`CglibSubclassingInstantiationStrategy`来进行实例化，这样的好处在于？
 
+### 4.字符串expression解析框架，所采用的一些算法和原理?
+
 ## 步骤
 
 ### 1.初始化 
@@ -28,3 +30,12 @@ xmlBeanDefinitionReader中对XML文件进行解析
 
 实现了关于继承式的参数初始化注入过程
 主要是在`BeanWrapperImpl`实现继承式的参数注入
+
+#### 3.1 bean实例化三步骤之生成beanInstance
+#### 3.2 bean实例化三步骤之convertForProperty
+beanInstance中所有的域进行实例化操作,借助`BeanWrapperImpl`中convertForProperty方法实现,并把处理权交给`TypeConverterDelegate`来实现。
+针对不同的属性:获得属性的的值,以及属性对应的类型,如果属性与对应的类型相一致,则直接返回,否则就进行类型转换.
+
+`CachedIntrospectionResults`的作用是? 能够得到某个beanClass所有的属性值,以及属性所对应的读or写方法
+
+

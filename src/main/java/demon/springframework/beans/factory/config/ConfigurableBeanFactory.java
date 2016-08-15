@@ -8,4 +8,13 @@ public interface ConfigurableBeanFactory {
 	
 	ClassLoader getBeanClassLoader();
 	
+	void setBeanExpressionResolver(BeanExpressionResolver resolver);
+
+	/**
+	 * Return the resolution strategy for expressions in bean definition values.
+	 * @since 3.0
+	 */
+	BeanExpressionResolver getBeanExpressionResolver();
+
+	
 }

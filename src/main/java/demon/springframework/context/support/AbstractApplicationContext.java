@@ -3,15 +3,13 @@ package demon.springframework.context.support;
 import java.util.List;
 
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.core.convert.ConversionService;
 
 import demon.springframework.beans.BeanPostProcessor;
 import demon.springframework.beans.factory.AbstractBeanFactory;
-import demon.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
+import demon.springframework.beans.factory.config.ConfigurableBeanFactory;
 import demon.springframework.context.ConfigurableApplicationContext;
 import demon.springframework.context.WebApplicationContext;
-import demon.springframework.web.context.ConfigurableWebApplicationContext;
+import demon.springframework.context.expression.StandardBeanExpressionResolver;
 
 /**
  * @author yihua.huang@dianping.com
@@ -30,6 +28,8 @@ public abstract class AbstractApplicationContext implements WebApplicationContex
 	public void refresh() throws Exception {
 		//防止多个线程的进入
 		//所以说LoadBeanDefintion的函数完全可以由处理器来完成替代
+		prepareBeanFactory(beanFactory);
+		
 		loadBeanDefinitions(beanFactory);
 		
 		//这里只是完成了对BeanPostProcessor的注册,而没有执行调用方法
@@ -37,6 +37,10 @@ public abstract class AbstractApplicationContext implements WebApplicationContex
 		
 		onRefresh();
 		
+	}
+	
+	protected void prepareBeanFactory(ConfigurableBeanFactory beanFactory) {
+		beanFactory.setBeanExpressionResolver(new StandardBeanExpressionResolver());
 	}
 
 	protected abstract void loadBeanDefinitions(AbstractBeanFactory beanFactory) throws Exception;

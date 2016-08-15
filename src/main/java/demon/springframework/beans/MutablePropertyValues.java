@@ -12,6 +12,8 @@ public class MutablePropertyValues implements TestPropertyValues {
 	
 	private final List<TestPropertyValue> propertyValueList;
 	
+	private volatile boolean converted = false;
+	
 	public MutablePropertyValues() {
 		this.propertyValueList = new ArrayList<TestPropertyValue>(0);
 	}
@@ -84,6 +86,14 @@ public class MutablePropertyValues implements TestPropertyValues {
 	@Override
 	public boolean isEmpty() {
 		return false;
+	}
+	
+	public void setConverted() {
+		this.converted = true;
+	}
+
+	public boolean isConverted() {
+		return this.converted;
 	}
 	
 	@Override

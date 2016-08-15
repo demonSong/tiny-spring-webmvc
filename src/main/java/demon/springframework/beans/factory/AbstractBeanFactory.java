@@ -11,8 +11,6 @@ import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.CannotLoadBeanClassException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.config.BeanExpressionContext;
-import org.springframework.beans.factory.config.Scope;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
@@ -21,7 +19,10 @@ import demon.springframework.beans.BeanDefinition;
 import demon.springframework.beans.BeanPostProcessor;
 import demon.springframework.beans.DmnBeanDefinition;
 import demon.springframework.beans.config.InstantiationAwareBeanPostProcessor;
+import demon.springframework.beans.factory.config.BeanExpressionContext;
+import demon.springframework.beans.factory.config.BeanExpressionResolver;
 import demon.springframework.beans.factory.config.ConfigurableBeanFactory;
+import demon.springframework.beans.factory.config.Scope;
 import demon.springframework.beans.factory.support.BeanDefinitionRegistry;
 import demon.springframework.beans.factory.support.FactoryBeanRegistrySupport;
 import demon.springframework.beans.factory.support.RootBeanDefinition;
@@ -40,6 +41,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	private final Map<String, RootBeanDefinition> mergedBeanDefinitions =
 			new ConcurrentHashMap<String, RootBeanDefinition>(64);
 	
+	/** Resolution strategy for expressions in bean definition values */
+	private BeanExpressionResolver beanExpressionResolver;
+	
 	private final List<String> beanDefinitionNames = new ArrayList<String>();
 
 	private List<BeanPostProcessor> beanPostProcessors = new ArrayList<BeanPostProcessor>();
@@ -48,6 +52,16 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	private final Map<Class<?>, String[]> allBeanNamesByType = new ConcurrentHashMap<Class<?>, String[]>(64);
 	
 	private boolean hasInstantiationAwareBeanPostProcessors;
+	
+	@Override
+	public void setBeanExpressionResolver(BeanExpressionResolver resolver) {
+		this.beanExpressionResolver = resolver;
+	}
+
+	@Override
+	public BeanExpressionResolver getBeanExpressionResolver() {
+		return this.beanExpressionResolver;
+	}
 
 	@Override
 	public Object getBean(String name) throws Exception {
@@ -344,7 +358,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 	
 	public Object evaluateBeanDefinitionString(String value, DmnBeanDefinition beanDefinition) {
-		return null;
+		if(this.beanExpressionResolver ==null){
+			return value;
+		}
+		Scope scope =null;
+		return this.beanExpressionResolver.evalute(value, new BeanExpressionContext(this, scope));
 	}
 	
 	protected abstract void populateBean(String beanName,BeanDefinition mbd,Object bean)throws Exception;
