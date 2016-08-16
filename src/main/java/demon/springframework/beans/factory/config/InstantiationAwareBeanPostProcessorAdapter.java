@@ -2,6 +2,8 @@ package demon.springframework.beans.factory.config;
 
 import java.beans.PropertyDescriptor;
 
+import org.springframework.beans.BeansException;
+
 import demon.springframework.beans.PropertyValues;
 import demon.springframework.beans.config.InstantiationAwareBeanPostProcessor;
 
@@ -10,13 +12,13 @@ public class InstantiationAwareBeanPostProcessorAdapter implements
 
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName)
-			throws Exception {
+			throws BeansException {
 		return bean;
 	}
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName)
-			throws Exception {
+			throws BeansException {
 		return bean;
 	}
 

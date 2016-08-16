@@ -6,9 +6,13 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.Aware;
+import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.ObjectUtils;
 
+import demon.springframework.beans.BeanPostProcessor;
 import demon.springframework.beans.BeanWrapper;
 import demon.springframework.beans.BeanWrapperImpl;
 import demon.springframework.beans.MutablePropertyValues;
@@ -44,8 +48,73 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		//initialize the bean instance
 		Object exposedObject =bean;
 		populateBean(beanName, mbd, instanceWrapper);
+		if(exposedObject !=null){
+			exposedObject =initializeBean(beanName,exposedObject,mbd);
+		}
 		
 		return exposedObject;
+	}
+	
+	protected Object initializeBean(final String beanName, final Object bean, RootBeanDefinition mbd) {
+		//回调beanClassLoader方法
+		invokeAwareMethods(beanName, bean);
+		
+		Object wrappedBean = bean;
+		wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
+		
+		try {
+			invokeInitMethods(beanName, wrappedBean, mbd);
+		} catch (Throwable e) {
+			throw new BeanCreationException(
+					(mbd != null ? mbd.toString() : null),
+					beanName, "Invocation of init method failed", e);
+		}
+		
+		wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
+		
+		return wrappedBean;
+	}
+	
+	protected void invokeInitMethods(String beanName, final Object bean, RootBeanDefinition mbd)
+			throws Throwable {
+		boolean isInitializingBean = (bean instanceof InitializingBean);
+		if(isInitializingBean){
+			((InitializingBean) bean).afterPropertiesSet();
+		}
+	}
+	
+	public Object applyBeanPostProcessorsBeforeInitialization(Object existingBean, String beanName)
+			throws BeansException {
+
+		Object result = existingBean;
+		for (BeanPostProcessor beanProcessor : getBeanPostProcessors()) {
+			result = beanProcessor.postProcessBeforeInitialization(result, beanName);
+			if (result == null) {
+				return result;
+			}
+		}
+		return result;
+	}
+	
+	public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName)
+			throws BeansException {
+
+		Object result = existingBean;
+		for (BeanPostProcessor beanProcessor : getBeanPostProcessors()) {
+			result = beanProcessor.postProcessAfterInitialization(result, beanName);
+			if (result == null) {
+				return result;
+			}
+		}
+		return result;
+	}
+	
+	protected void invokeAwareMethods(final String beanName, final Object bean) {
+		if(bean instanceof Aware){
+			if(bean instanceof BeanClassLoaderAware){
+				((BeanClassLoaderAware) bean).setBeanClassLoader(getBeanClassLoader());
+			}
+		}
 	}
 	
 	protected void populateBean(String beanName,RootBeanDefinition mbd,BeanWrapper bean) {

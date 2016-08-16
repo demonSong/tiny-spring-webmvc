@@ -1,5 +1,7 @@
 package demon.springframework.context.support;
 
+import org.springframework.beans.BeansException;
+
 import demon.springframework.beans.BeanPostProcessor;
 import demon.springframework.context.ApplicationContextAware;
 import demon.springframework.context.ConfigurableApplicationContext;
@@ -15,7 +17,7 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor{
 	
 	//在对某些bean组件进行初始化时,需要采用一些系统自带的processor做处理
 	@Override
-	public Object postProcessBeforeInitialization(final Object bean, String beanName) throws Exception {
+	public Object postProcessBeforeInitialization(final Object bean, String beanName) throws BeansException {
 		//accesscontrolcontext的作用
 		System.out.println("所以说,这是一个钩子,配置了这个处理器后,所有使用了applicationContextAware接口的"
 				+ "bean都会，回调setApplicationcontext的方法");
@@ -31,7 +33,7 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor{
 	}
 
 	@Override
-	public Object postProcessAfterInitialization(Object bean, String beanName) throws Exception {
+	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 		return bean;
 	}
 

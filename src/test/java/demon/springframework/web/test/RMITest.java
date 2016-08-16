@@ -14,7 +14,7 @@ public class RMITest {
 		try {
 			ClassPathXmlApplicationContext applicationContext =new ClassPathXmlApplicationContext("rmi.xml");
 			HelloWorldService helloWorldService=(HelloWorldService) applicationContext.getBean("rmiHelloWorldService");
-			helloWorldService.sayHello("rmi");
+			helloWorldService.sayHello("tiny-spring-webmvc");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

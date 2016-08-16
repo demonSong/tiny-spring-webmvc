@@ -93,6 +93,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		return bean;
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected<T> T doGetBean(final String name,final Class<T> requeiredType,final Object[] args,boolean typeCheckOnly )
 			throws BeansException{
 		final String beanName =name;
@@ -111,9 +112,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			});
 			bean =getObjectForBeanInstance(sharedInstance,name,beanName,mbd);
 		}
-		
-		
-		return null;
+		else {
+			return null;
+		}
+		return (T) bean;
 	}
 	
 	private Object getObjectForBeanInstance(Object beanInstance, String name,
