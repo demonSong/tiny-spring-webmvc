@@ -43,7 +43,6 @@ beanInstance中所有的域进行实例化操作,借助`BeanWrapperImpl`中conve
 `CachedIntrospectionResults`的作用是? 能够得到某个beanClass所有的属性值,以及属性所对应的读or写方法
 
 ### 4.实例化可分为两种bean 和 factoryBean
-当遇到FactoryBean进行实例化时,需要进行预实例化,做一些必要的初始化设置,否则无法根据JDKProxy生成工厂想要得到的Bean
-,因此需要区分预实例化和通过`getBean()`获得实际对象
-
+当遇到FactoryBean进行实例化时,需要调用`invokeInitMethods()`来对`FactoryBean`进行初始化域，通过对Bean接口的判断来进行自身的回调操作
+主要思想可以考虑一下：spring用来生成bean，同时bean自身定义了许多回调接口，再spring对bean进行初始化操作时，让bean对自己进行初始化操作。传统的new对象，需要对象自己显示的调用初始化方法，通过反射我们便能让这一切自动进行.
 
