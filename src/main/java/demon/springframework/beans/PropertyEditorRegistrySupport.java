@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import demon.springframework.beans.propertyeditors.ClassEditor;
-import demon.springframework.beansn.PropertyEditorRegistry;
 
 public class PropertyEditorRegistrySupport implements PropertyEditorRegistry{
 	

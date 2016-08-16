@@ -1,4 +1,4 @@
-package demon.springframework.beansn;
+package demon.springframework.beans;
 
 public interface PropertyEditorRegistry {
 
