@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import demon.springframework.context.ClassPathXmlApplicationContext;
 import demon.springframework.remoting.rmi.RmiProxyFactoryBean;
+import demon.test.service.HelloWorldService;
 
 public class RMITest {
 	
@@ -12,7 +13,8 @@ public class RMITest {
 	public void test(){
 		try {
 			ClassPathXmlApplicationContext applicationContext =new ClassPathXmlApplicationContext("rmi.xml");
-			RmiProxyFactoryBean proxy =(RmiProxyFactoryBean) applicationContext.getBean("rmiHelloWorldService");
+			HelloWorldService helloWorldService=(HelloWorldService) applicationContext.getBean("rmiHelloWorldService");
+			helloWorldService.sayHello("rmi");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

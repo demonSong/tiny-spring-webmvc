@@ -1,6 +1,6 @@
 package demon.springframework.beans;
 
-public interface BeanWrapper extends TypeConverter{
+public interface BeanWrapper extends ConfigurablePropertyAccessor{
 	
 	Object getWrappedInstance();
 	

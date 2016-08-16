@@ -18,6 +18,11 @@ public class MutablePropertyValues implements TestPropertyValues {
 		this.propertyValueList = new ArrayList<TestPropertyValue>(0);
 	}
 	
+	public MutablePropertyValues(List<TestPropertyValue> propertyValueList) {
+		this.propertyValueList =
+				(propertyValueList != null ? propertyValueList : new ArrayList<TestPropertyValue>());
+	}
+	
 	public MutablePropertyValues(TestPropertyValues original) {
 		if (original != null) {
 			TestPropertyValue[] pvs = original.getPropertyValues();

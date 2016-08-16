@@ -10,6 +10,12 @@ import demon.springframework.core.convert.TypeDescriptor;
 
 class TypeConverterDelegate {
 	
+	private final PropertyEditorRegistrySupport propertyEditorRegistry;
+	
+	public TypeConverterDelegate(PropertyEditorRegistrySupport propertyEditorRegistry) {
+		this.propertyEditorRegistry =propertyEditorRegistry;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public <T> T convertIfNecessary(String propertyName, Object oldValue, Object newValue,
 			Class<T> requiredType, TypeDescriptor typeDescriptor) throws IllegalArgumentException {
@@ -98,6 +104,7 @@ class TypeConverterDelegate {
 	private PropertyEditor findDefaultEditor(Class<?> requiredType) {
 		PropertyEditor editor = null;
 		if (requiredType != null) {
+			editor =this.propertyEditorRegistry.getDefaultEditor(requiredType);
 			if (editor == null && !String.class.equals(requiredType)) {
 				// No BeanWrapper default editor -> check standard JavaBean editor.
 				editor = BeanUtils.findEditorByConvention(requiredType);

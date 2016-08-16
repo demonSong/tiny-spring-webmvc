@@ -9,7 +9,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
+import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.CannotLoadBeanClassException;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
@@ -93,6 +95,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	
 	protected<T> T doGetBean(final String name,final Class<T> requeiredType,final Object[] args,boolean typeCheckOnly )
 			throws BeansException{
+		final String beanName =name;
 		
 		Object bean;
 		Object sharedInstance;
@@ -106,10 +109,28 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					return createBean(name,mbd,args);
 				}
 			});
+			bean =getObjectForBeanInstance(sharedInstance,name,beanName,mbd);
 		}
 		
 		
 		return null;
+	}
+	
+	private Object getObjectForBeanInstance(Object beanInstance, String name,
+			String beanName, RootBeanDefinition mbd) {
+		if(!(beanInstance instanceof FactoryBean) ||BeanFactoryUtils.isFactoryDereference(name)){
+			return beanInstance;
+		}
+		Object object =null;
+		
+		if(object ==null){
+			FactoryBean<?> factory =(FactoryBean<?>) beanInstance;
+			if(mbd ==null){
+				mbd =getMergedLocalBeanDefinition(beanName);
+			}
+			object =getObjectFromFactoryBean(factory, beanName, true);
+		}
+		return object;
 	}
 	
 	protected abstract Object createBean(String beanName, RootBeanDefinition mbd, Object[] args)

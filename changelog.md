@@ -13,6 +13,10 @@
 
 ### 4.字符串expression解析框架，所采用的一些算法和原理?
 
+### 5.组合和继承的一些实现差异的思考?
+1.组合 需要对组合的域进行初始化功能,当然有些域是可配置的
+2.继承 在子类继承父类后,父类的方法便可以直接使用,无需初始化父类操作
+
 ## 步骤
 
 ### 1.初始化 
@@ -35,7 +39,11 @@ xmlBeanDefinitionReader中对XML文件进行解析
 #### 3.2 bean实例化三步骤之convertForProperty
 beanInstance中所有的域进行实例化操作,借助`BeanWrapperImpl`中convertForProperty方法实现,并把处理权交给`TypeConverterDelegate`来实现。
 针对不同的属性:获得属性的的值,以及属性对应的类型,如果属性与对应的类型相一致,则直接返回,否则就进行类型转换.
-
+`PropertyEditorRegistry`是用来注册spring自身的classEditor来完成属性value的转换 
 `CachedIntrospectionResults`的作用是? 能够得到某个beanClass所有的属性值,以及属性所对应的读or写方法
+
+### 4.实例化可分为两种bean 和 factoryBean
+当遇到FactoryBean进行实例化时,需要进行预实例化,做一些必要的初始化设置,否则无法根据JDKProxy生成工厂想要得到的Bean
+,因此需要区分预实例化和通过`getBean()`获得实际对象
 
 

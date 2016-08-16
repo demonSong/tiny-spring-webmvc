@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.util.ObjectUtils;
 
@@ -44,7 +45,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		Object exposedObject =bean;
 		populateBean(beanName, mbd, instanceWrapper);
 		
-		return null;
+		return exposedObject;
 	}
 	
 	protected void populateBean(String beanName,RootBeanDefinition mbd,BeanWrapper bean) {
@@ -106,6 +107,15 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			mpvs.setConverted();
 		}
 
+		//set our (possibly massaged) deep copy
+		try {
+			bw.setPropertyValues(new MutablePropertyValues(deepCopy));
+		} catch (BeansException ex) {
+			// TODO Auto-generated catch block
+			throw new BeanCreationException(
+					mbd.toString(), beanName, "Error setting property values", ex);
+		}
+		
 	}
 	
 	private Object convertForProperty(Object value, String propertyName, BeanWrapper bw, TypeConverter converter) {

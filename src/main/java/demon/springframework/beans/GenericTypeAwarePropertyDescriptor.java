@@ -6,6 +6,8 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.logging.LogFactory;
+
 class GenericTypeAwarePropertyDescriptor extends PropertyDescriptor {
 	
 	private final Class<?> beanClass;
@@ -42,6 +44,17 @@ class GenericTypeAwarePropertyDescriptor extends PropertyDescriptor {
 				this.ambiguousWriteMethods = ambiguousCandidates;
 			}
 		}
+	}
+	
+	public Method getWriteMethodForActualAccess() {
+		Set<Method> ambiguousCandidates = this.ambiguousWriteMethods;
+		if (ambiguousCandidates != null) {
+			this.ambiguousWriteMethods = null;
+			LogFactory.getLog(GenericTypeAwarePropertyDescriptor.class).warn("Invalid JavaBean property '" +
+					getName() + "' being accessed! Ambiguous write methods found next to actually used [" +
+					this.writeMethod + "]: " + ambiguousCandidates);
+		}
+		return this.writeMethod;
 	}
 	
 	public Class<?> getBeanClass() {
