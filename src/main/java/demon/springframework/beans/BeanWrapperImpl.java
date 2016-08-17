@@ -138,7 +138,6 @@ public class BeanWrapperImpl extends AbstractPropertyAccessor implements BeanWra
 	
 	@SuppressWarnings("unchecked")
 	private void setPropertyValue(PropertyTokenHolder tokens, TestPropertyValue pv) throws BeansException {
-		String propertyName =tokens.canonicalName;
 		String actualName =tokens.actualName;
 		PropertyDescriptor pd =pv.resolvedDescriptor;
 		if(pd ==null || !pd.getWriteMethod().getDeclaringClass().isInstance(this.object)){
@@ -148,7 +147,6 @@ public class BeanWrapperImpl extends AbstractPropertyAccessor implements BeanWra
 			}
 			pv.getOriginalPropertyValue().resolvedDescriptor =pd;
 		}
-		Object oldValue =null;
 		try {
 			Object originalValue = pv.getValue();
 			Object valueToApply = originalValue;
@@ -192,8 +190,6 @@ public class BeanWrapperImpl extends AbstractPropertyAccessor implements BeanWra
 		int pos = PropertyAccessorUtils.getFirstNestedPropertySeparatorIndex(propertyPath);
 		// Handle nested properties recursively.
 		if (pos > -1) {
-			String nestedProperty = propertyPath.substring(0, pos);
-			String nestedPath = propertyPath.substring(pos + 1);
 			throw new IllegalArgumentException("nested BeanWrapper are not supported!");
 		}
 		else {

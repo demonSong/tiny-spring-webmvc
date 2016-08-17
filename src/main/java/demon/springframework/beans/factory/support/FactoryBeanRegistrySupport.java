@@ -6,8 +6,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanCurrentlyInCreationException;
-import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.FactoryBeanNotInitializedException;
+
+import demon.springframework.beans.factory.FactoryBean;
 
 public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanRegistry{
 

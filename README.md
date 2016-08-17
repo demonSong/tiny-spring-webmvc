@@ -53,4 +53,6 @@ autowire有两种实现方式:
 
 #### 6.1重构BeanDefinition-理解SINGLETON && PROTOTYPE(完成)
 
+#### 6.2实现AOPProxy,基于切面进行方法增强
+
 

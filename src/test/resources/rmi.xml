@@ -15,9 +15,11 @@
 	</bean>
 
 	<!--RPC远程调用服务 -->
-	<bean id="rmiHelloWorldService" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">
+	<bean id="rmiHelloWorldService" class="demon.springframework.remoting.rmi.RmiProxyFactoryBean">
 		<property name="serviceUrl" value="rmi://127.0.0.1:1199/HelloWorldService" />
 		<property name="serviceInterface" value="demon.test.service.HelloWorldService" />
 	</bean>
+	
+	
 
 </beans>
