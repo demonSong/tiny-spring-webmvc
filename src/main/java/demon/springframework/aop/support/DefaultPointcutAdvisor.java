@@ -2,6 +2,8 @@ package demon.springframework.aop.support;
 
 import java.io.Serializable;
 
+import org.aopalliance.aop.Advice;
+
 import demon.springframework.aop.Pointcut;
 
 @SuppressWarnings("serial")
@@ -10,6 +12,15 @@ public class DefaultPointcutAdvisor extends AbstractGenericPointcutAdvisor imple
 	private Pointcut pointcut =Pointcut.TRUE;
 	
 	public DefaultPointcutAdvisor(){
+	}
+	
+	public DefaultPointcutAdvisor(Advice advice) {
+		this(Pointcut.TRUE, advice);
+	}
+	
+	public DefaultPointcutAdvisor(Pointcut pointcut, Advice advice) {
+		this.pointcut = pointcut;
+		setAdvice(advice);
 	}
 	
 	public void setPointcut(Pointcut pointcut) {

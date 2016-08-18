@@ -2,7 +2,7 @@ package demon.springframework.aop.framework;
 
 import org.aopalliance.intercept.Interceptor;
 
-public class ProxyFactory extends AdvisedSupport{
+public class ProxyFactory extends ProxyCreatorSupport{
 	
 	public ProxyFactory(Class<?> proxyInterface,Interceptor interceptor ){
 		addInterface(proxyInterface);
@@ -10,7 +10,7 @@ public class ProxyFactory extends AdvisedSupport{
 	}
 	
 	public Object getProxy(ClassLoader classLoader){
-		return null;
+		return createAopProxy().getProxy(classLoader);
 	}
 
 }

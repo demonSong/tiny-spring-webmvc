@@ -14,5 +14,11 @@ public interface Advised {
 	void addAdvice(Advice advice) throws AopConfigException;
 
 	void addAdvice(int pos, Advice advice) throws AopConfigException;
+	
+	Class<?>[] getProxiedInterfaces();
+	
+	Advisor[] getAdvisors();
+	
+	boolean isInterfaceProxied(Class<?> intf);
 
 }

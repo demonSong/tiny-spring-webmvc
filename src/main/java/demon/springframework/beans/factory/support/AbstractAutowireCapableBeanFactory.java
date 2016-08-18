@@ -6,10 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.Aware;
-import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.ObjectUtils;
 
 import demon.springframework.beans.BeanPostProcessor;
@@ -20,7 +17,10 @@ import demon.springframework.beans.TestPropertyValue;
 import demon.springframework.beans.TestPropertyValues;
 import demon.springframework.beans.TypeConverter;
 import demon.springframework.beans.factory.AbstractBeanFactory;
+import demon.springframework.beans.factory.Aware;
+import demon.springframework.beans.factory.BeanClassLoaderAware;
 import demon.springframework.beans.factory.BeanFactory;
+import demon.springframework.beans.factory.InitializingBean;
 import demon.springframework.beans.factory.config.TypedStringValue;
 
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory {
