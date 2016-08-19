@@ -1,4 +1,4 @@
-实现AOPProxy,基于切面进行方法增强
+理解spring-hessian HTTP远程调用实现原理
 ====
 
 ## 思考?
@@ -38,4 +38,6 @@
 4.动态代理对象进行接口方法回调时,对其回调的方法做增强处理
 5.在`ReflectiveMethodInvocation`进行对拦截器方法的回调,即我们需要增强的内容.
 6.很显然,我们需要增强的内容便是`stub`调用远程服务的方法.
+7.spring 在stub中还封装了一层invocationHandler来实现服务的调用
+8.真正的服务之间的调用是通过反射+AOP来完成的 
 
