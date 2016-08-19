@@ -12,7 +12,10 @@ import org.springframework.aop.framework.AopConfigException;
 import org.springframework.util.Assert;
 
 import demon.springframework.aop.Advisor;
+import demon.springframework.aop.TargetSource;
 import demon.springframework.aop.support.DefaultPointcutAdvisor;
+import demon.springframework.aop.target.EmptyTargetSource;
+import demon.springframework.aop.target.SingletonTargetSource;
 
 public class AdvisedSupport implements Advised{
 	
@@ -24,9 +27,11 @@ public class AdvisedSupport implements Advised{
 	
 	private Advisor[] advisorArray = new Advisor[0];
 	
+	public static final TargetSource EMPTY_TARGET_SOURCE = EmptyTargetSource.INSTANCE;
+	
+	TargetSource targetSource =EMPTY_TARGET_SOURCE;
+	
 	private transient Map<MethodCacheKey, List<Object>> methodCache;
-	
-	
 	
 	public AdvisedSupport() {
 		initMethodCache();
@@ -40,6 +45,18 @@ public class AdvisedSupport implements Advised{
 		this.methodCache.clear();
 	}
 	
+	public void setInterfaces(Class<?>... interfaces) {
+		Assert.notNull(interfaces, "Interfaces must not be null");
+		this.interfaces.clear();
+		for (Class<?> ifc : interfaces) {
+			addInterface(ifc);
+		}
+	}
+	
+	/**
+	 * 添加serviceInterface的用处是什么?
+	 * @param intf
+	 */
 	public void addInterface(Class<?> intf) {
 		Assert.notNull(intf, "Interface must not be null");
 		if (!intf.isInterface()) {
@@ -47,6 +64,7 @@ public class AdvisedSupport implements Advised{
 		}
 		if (!this.interfaces.contains(intf)) {
 			this.interfaces.add(intf);
+			adviceChanged();
 		}
 	}
 	
@@ -59,6 +77,20 @@ public class AdvisedSupport implements Advised{
 			this.methodCache.put(cacheKey, cached);
 		}
 		return cached;
+	}
+	
+	public void setTarget(Object target) {
+		setTargetSource(new SingletonTargetSource(target));
+	}
+
+	@Override
+	public void setTargetSource(TargetSource targetSource) {
+		this.targetSource = (targetSource != null ? targetSource : EMPTY_TARGET_SOURCE);
+	}
+
+	@Override
+	public TargetSource getTargetSource() {
+		return this.targetSource;
 	}
 	
 	@Override

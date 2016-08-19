@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.springframework.core.BridgeMethodResolver;
+import org.springframework.util.ReflectionUtils;
 
 import demon.springframework.aop.ProxyMethodInvocation;
 
@@ -13,20 +14,26 @@ import demon.springframework.aop.ProxyMethodInvocation;
 public class ReflectiveMethodInvocation implements ProxyMethodInvocation,Cloneable{
 	
 	protected final Object proxy;
+	
+	protected final Object target;
 
 	protected final Method method;
 
 	protected Object[] arguments;
+	
+	private final Class<?> targetClass;
 	
 	protected final List<?> interceptorsAndDynamicMethodMatchers;
 	
 	private int currentInterceptorIndex = -1;
 	
 	protected ReflectiveMethodInvocation(
-			Object proxy, Method method, Object[] arguments,
-			List<Object> interceptorsAndDynamicMethodMatchers) {
+			Object proxy, Object target, Method method, Object[] arguments,
+			Class<?> targetClass, List<Object> interceptorsAndDynamicMethodMatchers) {
 
 		this.proxy = proxy;
+		this.target = target;
+		this.targetClass = targetClass;
 		this.method = BridgeMethodResolver.findBridgedMethod(method);
 		this.arguments = arguments;
 		this.interceptorsAndDynamicMethodMatchers = interceptorsAndDynamicMethodMatchers;
@@ -53,7 +60,8 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation,Cloneab
 	}
 	
 	protected Object invokeJoinpoint() throws Throwable {
-		return null;
+		ReflectionUtils.makeAccessible(this.method);
+		return method.invoke(this.target, this.arguments);
 	}
 
 	@Override

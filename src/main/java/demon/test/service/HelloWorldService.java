@@ -1,6 +1,6 @@
 package demon.test.service;
 
-public interface HelloWord {
+public interface HelloWorldService {
 
 	public void sayHello(String name);
 

@@ -1,10 +1,10 @@
 package demon.springframework.remoting.rmi;
 
 import org.aopalliance.intercept.MethodInvocation;
-import org.springframework.remoting.support.DefaultRemoteInvocationFactory;
-import org.springframework.remoting.support.RemoteInvocation;
-import org.springframework.remoting.support.RemoteInvocationFactory;
 
+import demon.springframework.remoting.support.DefaultRemoteInvocationFactory;
+import demon.springframework.remoting.support.RemoteInvocation;
+import demon.springframework.remoting.support.RemoteInvocationFactory;
 import demon.springframework.remoting.support.UrlBasedRemoteAccessor;
 
 public abstract class RemoteInvocationBasedAccessor extends UrlBasedRemoteAccessor {

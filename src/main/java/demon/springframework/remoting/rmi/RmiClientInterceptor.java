@@ -14,7 +14,6 @@ import org.springframework.remoting.RemoteConnectFailureException;
 import org.springframework.remoting.RemoteInvocationFailureException;
 import org.springframework.remoting.RemoteLookupFailureException;
 import org.springframework.remoting.rmi.RmiClientInterceptorUtils;
-import org.springframework.remoting.rmi.RmiInvocationHandler;
 import org.springframework.remoting.support.RemoteInvocationUtils;
 
 public class RmiClientInterceptor extends RemoteInvocationBasedAccessor implements MethodInterceptor{

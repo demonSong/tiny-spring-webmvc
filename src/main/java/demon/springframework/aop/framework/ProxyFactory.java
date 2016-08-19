@@ -4,6 +4,9 @@ import org.aopalliance.intercept.Interceptor;
 
 public class ProxyFactory extends ProxyCreatorSupport{
 	
+	public ProxyFactory(){
+	}
+	
 	public ProxyFactory(Class<?> proxyInterface,Interceptor interceptor ){
 		addInterface(proxyInterface);
 		addAdvice(interceptor);

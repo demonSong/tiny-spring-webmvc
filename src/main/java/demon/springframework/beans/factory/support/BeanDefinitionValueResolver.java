@@ -1,10 +1,13 @@
 package demon.springframework.beans.factory.support;
 
+import org.aspectj.weaver.patterns.ThisOrTargetAnnotationPointcut;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.util.ObjectUtils;
 
 import demon.springframework.beans.DmnBeanDefinition;
 import demon.springframework.beans.factory.AbstractBeanFactory;
+import demon.springframework.beans.factory.config.RuntimeBeanReference;
 import demon.springframework.beans.factory.config.TypedStringValue;
 
 class BeanDefinitionValueResolver {
@@ -25,7 +28,11 @@ class BeanDefinitionValueResolver {
 	
 	public Object resolveValueIfNecessary(Object argName, Object value) {
 		
-		if (value instanceof TypedStringValue) {
+		if(value instanceof RuntimeBeanReference){
+			RuntimeBeanReference ref = (RuntimeBeanReference) value;
+			return resolveReference(argName, ref);
+		}
+		else if (value instanceof TypedStringValue) {
 			// Convert value to target type here.
 			TypedStringValue typedStringValue = (TypedStringValue) value;
 			Object valueObject = evaluate(typedStringValue);
@@ -50,6 +57,21 @@ class BeanDefinitionValueResolver {
 		}
 	}
 	
+	
+	
+	private Object resolveReference(Object argName, RuntimeBeanReference ref) {
+		try {
+			String refName =ref.getBeanName();
+			refName =String.valueOf(evaluate(refName));
+			Object bean =this.beanFactory.getBean(refName);
+			return bean;
+		} catch (Exception ex) {
+			throw new BeanCreationException(
+					this.beanDefinition.toString(), this.beanName,
+					"Cannot resolve reference to bean '" + ref.getBeanName() + "' while setting " + argName, ex);
+		}
+	}
+
 	protected Object evaluate(TypedStringValue value) {
 		Object result = this.beanFactory.evaluateBeanDefinitionString(value.getValue(), this.beanDefinition);
 		if (!ObjectUtils.nullSafeEquals(result, value.getValue())) {

@@ -4,8 +4,13 @@ import org.aopalliance.aop.Advice;
 import org.springframework.aop.framework.AopConfigException;
 
 import demon.springframework.aop.Advisor;
+import demon.springframework.aop.TargetSource;
 
 public interface Advised {
+	
+	void setTargetSource(TargetSource targetSource);
+
+	TargetSource getTargetSource();
 
 	void addAdvisor(Advisor advisor) throws AopConfigException;
 

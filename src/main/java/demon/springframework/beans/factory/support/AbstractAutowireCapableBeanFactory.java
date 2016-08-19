@@ -119,6 +119,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	
 	protected void populateBean(String beanName,RootBeanDefinition mbd,BeanWrapper bean) {
 		TestPropertyValues pvs =mbd.getPropertyValues();
+		
 		applyPropertyValues(beanName, mbd, bean,pvs);
 	}
 
@@ -151,6 +152,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			else {
 				String propertyName =pv.getName();
 				Object originalValue = pv.getValue();
+				//这里也是一种转换过程,是对xml抽象数据定义的转换
 				Object resolvedValue =valueResolver.resolveValueIfNecessary(pv, originalValue);
 				//resolvedValue均为字符串
 				Object convertedValue =resolvedValue;

@@ -30,4 +30,16 @@
 	<bean id="handlerAdapter" class="demon.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"></bean>
 	<bean id="requestMappingHandlerAdapter" class="demon.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"></bean>
 	
+	<bean id="helloWorldService" class="demon.test.service.HelloWorldServiceImpl" />
+	
+	<!--增加RMI服务器端的封装  -->
+	<bean id="rmiServiceExporter" class="demon.springframework.remoting.rmi.RmiServiceExporter">
+		<!-- 不一定要与要输出的bean同名 -->
+		<property name="serviceName" value="HelloWorldService" />
+		<property name="service" ref="helloWorldService" />
+		<property name="serviceInterface" value="demon.test.service.HelloWorldService" />
+		<!-- 默认为1199 -->
+		<property name="registryPort" value="1199" />
+	</bean>
+	
 </beans>
