@@ -10,7 +10,7 @@
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
 	<!--Hessian HTTP远程调用 -->
-	<bean id="hessianHelloWorldService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+	<bean id="hessianHelloWorldService" class="demon.springframework.remoting.caucho.HessianProxyFactoryBean">
 		<property name="serviceUrl" value="http://127.0.0.1:8080/rpc-service/remoting/HelloWorldService" />
 		<property name="serviceInterface" value="demon.test.service.HelloWorldService" />
 	</bean>

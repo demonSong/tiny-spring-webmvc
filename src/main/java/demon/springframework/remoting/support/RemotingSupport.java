@@ -12,6 +12,16 @@ public abstract class RemotingSupport implements BeanClassLoaderAware {
 		return this.beanClassLoader;
 	}
 	
+	protected ClassLoader overrideThreadContextClassLoader() {
+		return ClassUtils.overrideThreadContextClassLoader(getBeanClassLoader());
+	}
+	
+	protected void resetThreadContextClassLoader(ClassLoader original) {
+		if (original != null) {
+			Thread.currentThread().setContextClassLoader(original);
+		}
+	}
+
 	@Override
 	public void setBeanClassLoader(ClassLoader classLoader) {
 		this.beanClassLoader = classLoader;

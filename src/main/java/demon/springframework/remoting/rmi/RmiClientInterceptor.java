@@ -41,7 +41,7 @@ public class RmiClientInterceptor extends RemoteInvocationBasedAccessor implemen
 	}
 	
 	@Override
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet(){
 		super.afterPropertiesSet();
 		prepare();
 	}

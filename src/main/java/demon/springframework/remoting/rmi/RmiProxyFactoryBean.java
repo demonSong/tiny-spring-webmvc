@@ -14,7 +14,7 @@ public class RmiProxyFactoryBean extends RmiClientInterceptor implements Factory
 	}
 
 	@Override
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() {
 		super.afterPropertiesSet();
 		if (getServiceInterface() == null) {
 			throw new IllegalArgumentException("Property 'serviceInterface' is required");
