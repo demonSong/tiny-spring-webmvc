@@ -1,6 +1,7 @@
 package demon.caucho.hessian.io;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 public abstract class AbstractHessianOutput {
 
@@ -23,6 +24,9 @@ public abstract class AbstractHessianOutput {
 		return _serializerFactory;
 	}
 
+	public void init(OutputStream os) {
+	}
+
 	public void call(String method, Object[] args) throws IOException {
 		int length = args != null ? args.length : 0;
 
@@ -35,6 +39,9 @@ public abstract class AbstractHessianOutput {
 	}
 
 	public void flush() throws IOException {
+	}
+
+	public void close() throws IOException {
 	}
 
 	public abstract void startCall(String method, int length)

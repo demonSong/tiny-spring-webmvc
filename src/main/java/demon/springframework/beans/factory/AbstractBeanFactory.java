@@ -67,7 +67,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	@Override
 	public Object getBean(String name) throws Exception {
 		//需要重构的地方
-		if(name.equals("rmiHelloWorldService") || name.equals("rmiServiceExporter") || name.equals("hessianHelloWorldService")){
+		if(name.equals("rmiHelloWorldService") || name.equals("rmiServiceExporter") || name.equals("hessianHelloWorldService") || name.equals("helloWorldServiceExporter")){
 			return doGetBean(name,null,null,false);
 		}
 		return doGetBean(name);

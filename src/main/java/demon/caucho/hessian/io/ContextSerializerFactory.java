@@ -16,10 +16,16 @@ public class ContextSerializerFactory {
 	private static final ClassLoader _systemClassLoader;
 
 	private static HashMap<String, Serializer> _staticSerializerMap;
+	private static HashMap<String,Deserializer> _staticDeserializerMap;
+	
 	private final HashMap<String, Serializer> _serializerClassMap = new HashMap<String, Serializer>();
+	private final HashMap<String, Deserializer> _deserializerClassMap = new HashMap<String, Deserializer>();
 
 	static {
 		_staticSerializerMap = new HashMap<String, Serializer>();
+		_staticDeserializerMap = new HashMap<String, Deserializer>();
+		
+		//同时加入了序列化和反序列化的解析工具
 		addBasic(String.class, "string", BasicSerializer.STRING);
 
 		ClassLoader systemClassLoader = null;
@@ -44,10 +50,12 @@ public class ContextSerializerFactory {
 	private void init() {
 		if (_parent != null) {
 			_serializerClassMap.putAll(_parent._serializerClassMap);
+			_deserializerClassMap.putAll(_parent._deserializerClassMap);
 		}
 
 		if (_parent == null) {
 			_serializerClassMap.putAll(_staticSerializerMap);
+			_deserializerClassMap.putAll(_staticDeserializerMap);
 		}
 	}
 
@@ -89,6 +97,7 @@ public class ContextSerializerFactory {
 
 	private static void addBasic(Class cl, String typeName, int type) {
 		_staticSerializerMap.put(cl.getName(), new BasicSerializer(type));
+		_staticDeserializerMap.put(cl.getName(), new BasicDeserializer(type));
 	}
 
 	public Serializer getSerializer(String className) {
@@ -97,6 +106,16 @@ public class ContextSerializerFactory {
 			return null;
 		} else {
 			return serializer;
+		}
+	}
+
+	public Deserializer getDeserializer(String className) {
+		Deserializer deserializer = _deserializerClassMap.get(className);
+
+		if (deserializer == null) {
+			return null;
+		} else {
+			return deserializer;
 		}
 	}
 }

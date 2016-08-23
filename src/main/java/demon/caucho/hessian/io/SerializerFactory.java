@@ -8,10 +8,11 @@ import com.caucho.hessian.io.HessianProtocolException;
 public class SerializerFactory extends AbstractSerializerFactory {
 
 	private WeakReference<ClassLoader> _loaderRef;
-	
+
 	private ContextSerializerFactory _contextFactory;
 
 	private ConcurrentHashMap _cachedSerializerMap;
+	private ConcurrentHashMap _cachedDeserializerMap;
 
 	public SerializerFactory() {
 		this(Thread.currentThread().getContextClassLoader());
@@ -19,8 +20,8 @@ public class SerializerFactory extends AbstractSerializerFactory {
 
 	public SerializerFactory(ClassLoader loader) {
 		_loaderRef = new WeakReference<ClassLoader>(loader);
-		
-		_contextFactory =ContextSerializerFactory.create(loader);
+
+		_contextFactory = ContextSerializerFactory.create(loader);
 	}
 
 	public ClassLoader getClassLoader() {
@@ -52,10 +53,42 @@ public class SerializerFactory extends AbstractSerializerFactory {
 	protected Serializer loadSerializer(Class<?> cl)
 			throws HessianProtocolException {
 		Serializer serializer = null;
-		serializer =_contextFactory.getSerializer(cl.getName());
-		
-		if(serializer !=null){
+		serializer = _contextFactory.getSerializer(cl.getName());
+
+		if (serializer != null) {
 			return serializer;
+		}
+		return null;
+	}
+
+	public Deserializer getDeserializer(Class cl)
+			throws HessianProtocolException {
+		Deserializer deserializer;
+
+		if (_cachedDeserializerMap != null) {
+			deserializer = (Deserializer) _cachedDeserializerMap.get(cl);
+
+			if (deserializer != null)
+				return deserializer;
+		}
+
+		deserializer = loadDeserializer(cl);
+
+		if (_cachedDeserializerMap == null)
+			_cachedDeserializerMap = new ConcurrentHashMap(8);
+
+		_cachedDeserializerMap.put(cl, deserializer);
+
+		return deserializer;
+	}
+
+	protected Deserializer loadDeserializer(Class cl)
+			throws HessianProtocolException {
+		Deserializer deserializer = null;
+		
+		deserializer =_contextFactory.getDeserializer(cl.getName());
+		if (deserializer != null){
+		      return deserializer;
 		}
 		return null;
 	}

@@ -130,6 +130,7 @@ public abstract class FrameworkServlet extends HttpServletBean {
 				doService(request, response);
 			}
 			catch (Exception e) {
+				e.printStackTrace();
 			}
 			finally{
 			}

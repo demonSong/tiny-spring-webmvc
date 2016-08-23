@@ -21,6 +21,7 @@
 			<props>
 				<prop key="/add">addController</prop>
 				<prop key="/update">updateController</prop>
+				<prop key="/remoting/HelloWorldService">helloWorldServiceExporter</prop>
 			</props>
 		</property>
 	</bean>
@@ -40,6 +41,12 @@
 		<property name="serviceInterface" value="demon.test.service.HelloWorldService" />
 		<!-- 默认为1199 -->
 		<property name="registryPort" value="1199" />
+	</bean>
+	
+	<!--增加Hessian HTTP请求服务端的封装  -->
+	<bean id="helloWorldServiceExporter" class="demon.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="helloWorldService" />
+		<property name="serviceInterface" value="demon.test.service.HelloWorldService" />
 	</bean>
 	
 </beans>

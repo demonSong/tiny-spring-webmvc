@@ -1,10 +1,14 @@
 package demon.springframework.remoting.support;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.util.ClassUtils;
 
 import demon.springframework.beans.factory.BeanClassLoaderAware;
 
 public abstract class RemotingSupport implements BeanClassLoaderAware {
+	
+	protected final Log logger =LogFactory.getLog(getClass());
 
 	private ClassLoader beanClassLoader = ClassUtils.getDefaultClassLoader();
 	
