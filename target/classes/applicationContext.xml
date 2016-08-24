@@ -10,7 +10,7 @@
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
 	<demo-context:component-scan base-package="demon.springframework.web.servlet.test" />
-	
+
 	<!--controller 映射关系的建立 -->
 	<!-- <bean id="add" class="demon.springframework.web.servlet.test.AddController"></bean> 
 		<bean id="update" class="demon.springframework.web.servlet.test.UpdateController"></bean> -->
@@ -28,8 +28,10 @@
 	
 	<bean id="requestMappingHandlerMapping" class="demon.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"></bean>
 
+	<!--添加适配器 适配DispatcherServlet中handler和各种`handle`接口  -->
 	<bean id="handlerAdapter" class="demon.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"></bean>
 	<bean id="requestMappingHandlerAdapter" class="demon.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"></bean>
+	
 	
 	<bean id="helloWorldService" class="demon.test.service.HelloWorldServiceImpl" />
 	

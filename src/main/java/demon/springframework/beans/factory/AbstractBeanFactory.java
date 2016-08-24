@@ -67,8 +67,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	@Override
 	public Object getBean(String name) throws Exception {
 		//需要重构的地方
-		if(name.equals("rmiHelloWorldService") || name.equals("rmiServiceExporter") || name.equals("hessianHelloWorldService") || name.equals("helloWorldServiceExporter")){
-			return doGetBean(name,null,null,false);
+		if (name.equals("rmiHelloWorldService")
+				|| name.equals("rmiServiceExporter")
+				|| name.equals("hessianHelloWorldService")
+				|| name.equals("helloWorldServiceExporter")
+				|| name.equals("aopService")) {
+			return doGetBean(name, null, null, false);
 		}
 		return doGetBean(name);
 	}
@@ -294,6 +298,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		return this.hasInstantiationAwareBeanPostProcessors;
 	}
 
+	//postProcessor可以是个bean,但如果processor没有被初始化,就先对postProcessor进行getBean()做初始化操作
+	//所以不管如何 postProcessor始终是先被初始化的,且是没有依赖关系的初始化
 	public List getBeansForType(Class<?> type) throws Exception {
 		List beans = new ArrayList<Object>();
 		//从beandefinition中获得所有的跟type相关的beans
