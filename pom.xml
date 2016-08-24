@@ -27,6 +27,13 @@
 			<artifactId>javax.servlet</artifactId>
 			<version>3.1.1</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.caucho</groupId>
+			<artifactId>hessian</artifactId>
+			<version>4.0.38</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>aopalliance</groupId>
 			<artifactId>aopalliance</artifactId>
@@ -89,11 +96,6 @@
 			<groupId>com.vip.venus</groupId>
 			<artifactId>venus-core</artifactId>
 			<version>1.6.1</version>
-		</dependency>
-		<dependency>
-			<groupId>demon.test</groupId>
-			<artifactId>rpc-service</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
