@@ -12,4 +12,5 @@
 	<!--理解AOP实现原理  -->
 	<bean id ="aopService" class ="demon.springframework.aop.service.impl.AopHelloServiceImpl" />
 
+	<bean id ="annotationAwareAspectJAutoProxyCreator" class ="demon.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator" />
 </beans>

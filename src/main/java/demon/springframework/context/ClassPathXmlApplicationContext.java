@@ -6,6 +6,7 @@ import demon.springframework.beans.BeanDefinition;
 import demon.springframework.beans.factory.AbstractBeanFactory;
 import demon.springframework.beans.factory.AutowireCapableBeanFactory;
 import demon.springframework.beans.factory.support.BeanDefinitionRegistry;
+import demon.springframework.beans.factory.support.DefaultListableBeanFactory;
 import demon.springframework.beans.io.ResourceLoader;
 import demon.springframework.beans.xml.XmlBeanDefinitionReader;
 import demon.springframework.context.support.AbstractApplicationContext;
@@ -18,7 +19,7 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
 	private String configLocation;
 
 	public ClassPathXmlApplicationContext(String configLocation) throws Exception {
-		this(configLocation, new AutowireCapableBeanFactory());
+		this(configLocation, new DefaultListableBeanFactory());
 	}
 
 	public ClassPathXmlApplicationContext(String configLocation, AbstractBeanFactory beanFactory) throws Exception {
